@@ -15,21 +15,25 @@ def custom_network(model,dataset):
         out_classes = 10
     if(dataset == 'seq-cifar100'):
         out_classes = 100
+    if(dataset == 'seq-tinyimg-hd' or dataset == 'seq-tinyimg'):
+        out_classes = 200
     
     #Look after dataset == seq-tinyimg
 
     #CIFAR-10: we need to change the first "conv1" layer and the last "fc" layer
 
-    #Changing "conv1" layer from kernel_size=7, stride=2, padding=3 --> kernel_size=3, stride=1, padding=1
+    #Changing "conv1" layer params from kernel_size=7, stride=2, padding=3 --> kernel_size=3, stride=1, padding=1
     in_channels     = 3     #as per default
     inplanes        = 64    #as per default
     new_kernel_size = 3     #changed
     new_stride      = 1     #changed
     new_padding     = 1     #changed
 
-    model.conv1 = nn.Conv2d(in_channels, inplanes, kernel_size=new_kernel_size, stride=new_stride, padding=new_padding, bias=False)
+    #Change "conv1" layer only if dataset is not tiny-imgnet high-res
+    if(dataset == 'seq-cifar10' or dataset == 'seq-cifar100' or dataset == 'seq-tinyimg'):
+        model.conv1 = nn.Conv2d(in_channels, inplanes, kernel_size=new_kernel_size, stride=new_stride, padding=new_padding, bias=False)
 
-    #Changing "fc" layer according to the number of classes: from num=1000 --> num=10
+    #Changing "fc" layer according to the number of datasets' classes
     num_features = model.fc.in_features
     model.fc = nn.Linear(num_features, out_classes)
 

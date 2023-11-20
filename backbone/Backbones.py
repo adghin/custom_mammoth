@@ -48,7 +48,7 @@ def get_backbone(model,dataset):
     """
     model_name = model
     model_weights = "DEFAULT"
-    model = models.get_model(model_name,weights=model_weights)
+    model = models.get_model(model_name,weights=None)
 
     if(dataset == 'seq-cifar10' or dataset == 'seq-cifar100'):
         adapted_model = custom_network(model,dataset)

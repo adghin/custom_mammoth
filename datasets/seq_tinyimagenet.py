@@ -42,20 +42,22 @@ class TinyImagenet(Dataset):
                 from onedrivedownloader import download
 
                 print('Downloading dataset')
-                ln = "https://unimore365-my.sharepoint.com/:u:/g/personal/263133_unimore_it/EVKugslStrtNpyLGbgrhjaABqRHcE3PB_r2OEaV7Jy94oQ?e=9K29aD"
-                download(ln, filename=os.path.join(root, 'tiny-imagenet-processed.zip'), unzip=True, unzip_path=root, clean=True)
-
+                #ln = "https://unimore365-my.sharepoint.com/:u:/g/personal/263133_unimore_it/EVKugslStrtNpyLGbgrhjaABqRHcE3PB_r2OEaV7Jy94oQ?e=9K29aD"
+                #download(ln, filename=os.path.join(root, 'tiny-imagenet-processed.zip'), unzip=True, unzip_path=root, clean=True)
+                ln = "https://studentiunict-my.sharepoint.com/:u:/g/personal/ghndrn00t01z129z_studium_unict_it/ER7TNkigNjlIjsAQGL0tihwBIgCGJ5Pb4riYo0T_ojMAkQ?e=srQTdd"
+                download(ln, filename=os.path.join(root, 'tiny-imagenet-myprocessed-nohd.zip'), unzip=True, unzip_path=root, clean=True)
+                   
         self.data = []
         for num in range(20):
             self.data.append(np.load(os.path.join(
-                root, 'processed/x_%s_%02d.npy' %
+                root, 'my_processed/x_%s_%02d.npy' %
                       ('train' if self.train else 'val', num + 1))))
         self.data = np.concatenate(np.array(self.data))
 
         self.targets = []
         for num in range(20):
             self.targets.append(np.load(os.path.join(
-                root, 'processed/y_%s_%02d.npy' %
+                root, 'my_processed/y_%s_%02d.npy' %
                       ('train' if self.train else 'val', num + 1))))
         self.targets = np.concatenate(np.array(self.targets))
 
@@ -121,11 +123,15 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
     TRANSFORM = transforms.Compose(
-        [transforms.RandomCrop(64, padding=4),
+        [transforms.RandomCrop(224, padding=4),
          transforms.RandomHorizontalFlip(),
          transforms.ToTensor(),
          transforms.Normalize((0.4802, 0.4480, 0.3975),
                               (0.2770, 0.2691, 0.2821))])
+
+    mammoth_tiny = 'TINYIMG'
+    mytiny_hd    = 'MY-TINYIMG-HD'
+    mytiny_nohd  = 'MY-TINYIMG-NOHD'
 
     def get_data_loaders(self):
         transform = self.TRANSFORM
@@ -133,13 +139,13 @@ class SequentialTinyImagenet(ContinualDataset):
         test_transform = transforms.Compose(
             [transforms.ToTensor(), self.get_normalization_transform()])
 
-        train_dataset = MyTinyImagenet(base_path() + 'TINYIMG',
+        train_dataset = MyTinyImagenet(base_path() + mytiny_hd,
                                        train=True, download=True, transform=transform)
         if self.args.validation:
             train_dataset, test_dataset = get_train_val(train_dataset,
                                                         test_transform, self.NAME)
         else:
-            test_dataset = TinyImagenet(base_path() + 'TINYIMG',
+            test_dataset = TinyImagenet(base_path() + mytiny_hd,
                                         train=False, download=True, transform=test_transform)
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)

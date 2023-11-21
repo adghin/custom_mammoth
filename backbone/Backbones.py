@@ -2,6 +2,7 @@
 @author: adrian.ghinea@outlook.it
 Use this file for loading and adapting pre-trained pytorch models as backbones for experiments on complex datasets
 """
+import torch
 import torch.nn as nn
 import torchvision.models as models
 

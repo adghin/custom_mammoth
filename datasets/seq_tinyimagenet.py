@@ -122,12 +122,28 @@ class SequentialTinyImagenet(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
-    TRANSFORM = transforms.Compose(
+    #TRANSFORM = transforms.Compose(
         [transforms.RandomCrop(224, padding=4),
          transforms.RandomHorizontalFlip(),
          transforms.ToTensor(),
          transforms.Normalize((0.4802, 0.4480, 0.3975),
                               (0.2770, 0.2691, 0.2821))])
+
+    MY_TRAIN_TRANSFORM = transforms.Compose([
+                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.RandomCrop(224),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+
+    MY_TEST_TRANSFORM = transforms.Compose([
+                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.CenterCrop(224),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+
+    TRANSFORM = MY_TRAIN_TRANSFORM
 
     mammoth_tiny = 'TINYIMG'
     mytiny_hd    = 'MY-TINYIMG-HD'
@@ -136,8 +152,7 @@ class SequentialTinyImagenet(ContinualDataset):
     def get_data_loaders(self):
         transform = self.TRANSFORM
 
-        test_transform = transforms.Compose(
-            [transforms.ToTensor(), self.get_normalization_transform()])
+        test_transform = MY_TEST_TRANSFORM
 
         train_dataset = MyTinyImagenet(base_path() + mytiny_hd,
                                        train=True, download=True, transform=transform)

@@ -68,13 +68,29 @@ class SequentialCIFAR100(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 10
     N_TASKS = 10
-    TRANSFORM = transforms.Compose(
+    #TRANSFORM = transforms.Compose(
             [transforms.RandomCrop(32, padding=4),
              transforms.RandomHorizontalFlip(),
              transforms.ToTensor(),
              transforms.Normalize((0.5071, 0.4867, 0.4408),
                                   (0.2675, 0.2565, 0.2761))])
 
+    MY_TRAIN_TRANSFORM = transforms.Compose([
+                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.RandomCrop(224),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+
+    MY_TEST_TRANSFORM = transforms.Compose([
+                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.CenterCrop(224),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+
+    TRANSFORM = MY_TRAIN_TRANSFORM
+  
     def get_examples_number(self):
         train_dataset = MyCIFAR100(base_path() + 'CIFAR10', train=True,
                                   download=True)
@@ -83,8 +99,7 @@ class SequentialCIFAR100(ContinualDataset):
     def get_data_loaders(self):
         transform = self.TRANSFORM
 
-        test_transform = transforms.Compose(
-            [transforms.ToTensor(), self.get_normalization_transform()])
+        test_transform = MY_TEST_TRANSFORM
 
         train_dataset = MyCIFAR100(base_path() + 'CIFAR100', train=True,
                                   download=True, transform=transform)

@@ -97,7 +97,7 @@ class SequentialCIFAR10(ContinualDataset):
     def get_data_loaders(self):
         transform = self.TRANSFORM
 
-        test_transform = MY_TEST_TRANSFORM
+        test_transform = self.MY_TEST_TRANSFORM
 
         train_dataset = MyCIFAR10(base_path() + 'CIFAR10', train=True,
                                   download=True, transform=transform)

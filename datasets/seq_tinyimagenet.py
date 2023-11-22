@@ -156,13 +156,13 @@ class SequentialTinyImagenet(ContinualDataset):
 
         test_transform = self.MY_TEST_TRANSFORM
 
-        train_dataset = MyTinyImagenet(base_path() + mytiny_hd,
+        train_dataset = MyTinyImagenet(base_path() + self.mytiny_hd,
                                        train=True, download=True, transform=transform)
         if self.args.validation:
             train_dataset, test_dataset = get_train_val(train_dataset,
                                                         test_transform, self.NAME)
         else:
-            test_dataset = TinyImagenet(base_path() + mytiny_hd,
+            test_dataset = TinyImagenet(base_path() + self.mytiny_hd,
                                         train=False, download=True, transform=test_transform)
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)

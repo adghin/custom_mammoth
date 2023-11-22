@@ -122,12 +122,14 @@ class SequentialTinyImagenet(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
-    #TRANSFORM = transforms.Compose(
+    """
+    TRANSFORM = transforms.Compose(
         [transforms.RandomCrop(224, padding=4),
          transforms.RandomHorizontalFlip(),
          transforms.ToTensor(),
          transforms.Normalize((0.4802, 0.4480, 0.3975),
                               (0.2770, 0.2691, 0.2821))])
+    """
 
     MY_TRAIN_TRANSFORM = transforms.Compose([
                             transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),

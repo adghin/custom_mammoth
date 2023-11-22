@@ -68,12 +68,14 @@ class SequentialCIFAR10(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
-    #TRANSFORM = transforms.Compose(
+    """
+    TRANSFORM = transforms.Compose(
             [transforms.RandomCrop(32, padding=4),
              transforms.RandomHorizontalFlip(),
              transforms.ToTensor(),
              transforms.Normalize((0.4914, 0.4822, 0.4465),
                                   (0.2470, 0.2435, 0.2615))])
+    """
 
     MY_TRAIN_TRANSFORM = transforms.Compose([
                             transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),

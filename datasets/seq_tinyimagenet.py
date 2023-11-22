@@ -154,7 +154,7 @@ class SequentialTinyImagenet(ContinualDataset):
     def get_data_loaders(self):
         transform = self.TRANSFORM
 
-        test_transform = MY_TEST_TRANSFORM
+        test_transform = self.MY_TEST_TRANSFORM
 
         train_dataset = MyTinyImagenet(base_path() + mytiny_hd,
                                        train=True, download=True, transform=transform)

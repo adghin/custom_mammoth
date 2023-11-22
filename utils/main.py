@@ -119,12 +119,12 @@ def main(args=None):
     if hasattr(importlib.import_module('models.' + args.model), 'Buffer') and args.minibatch_size is None:
         args.minibatch_size = dataset.get_minibatch_size()
 
-    backbone = dataset.get_backbone()
+    #backbone = dataset.get_backbone()
 
     #START --- aghin
-    #backbone_name = parse_args().backbone
-    #dataset_name  = parse_args().dataset
-    #backbone = get_backbone(backbone_name,dataset_name) 
+    backbone_name = parse_args().backbone
+    dataset_name  = parse_args().dataset
+    backbone = get_backbone(backbone_name,dataset_name) 
     #END   --- aghin
 
     loss = dataset.get_loss()

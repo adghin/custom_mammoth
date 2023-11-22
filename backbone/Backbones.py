@@ -22,7 +22,7 @@ def custom_resnet(model,out_classes):
     new_stride      = 1     #changed
     new_padding     = 1     #changed
 
-    model.conv1 = nn.Conv2d(in_channels, inplanes, kernel_size=new_kernel_size, stride=new_stride, padding=new_padding, bias=False)
+    #model.conv1 = nn.Conv2d(in_channels, inplanes, kernel_size=new_kernel_size, stride=new_stride, padding=new_padding, bias=False)
 
     #Changing "fc" layer according to the number of datasets' classes
     num_features = model.fc.in_features

@@ -68,36 +68,22 @@ class SequentialCIFAR10(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
-    """
+    
     TRANSFORM = transforms.Compose(
             [transforms.RandomCrop(32, padding=4),
              transforms.RandomHorizontalFlip(),
              transforms.ToTensor(),
-             transforms.Normalize((0.4914, 0.4822, 0.4465),
-                                  (0.2470, 0.2435, 0.2615))])
-    """
-
-    MY_TRAIN_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.RandomCrop(224),
-                            transforms.RandomHorizontalFlip(),
+             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+  
+    TEST_TRANSFORM = transforms.Compose([
                             transforms.ToTensor(),
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
-
-    MY_TEST_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.CenterCrop(224),
-                            transforms.ToTensor(),
-                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
-                            ])
-
-    TRANSFORM = MY_TRAIN_TRANSFORM
 
     def get_data_loaders(self):
         transform = self.TRANSFORM
 
-        test_transform = self.MY_TEST_TRANSFORM
+        test_transform = self.TEST_TRANSFORM
 
         train_dataset = MyCIFAR10(base_path() + 'CIFAR10', train=True,
                                   download=True, transform=transform)
@@ -128,14 +114,12 @@ class SequentialCIFAR10(ContinualDataset):
 
     @staticmethod
     def get_normalization_transform():
-        transform = transforms.Normalize((0.4914, 0.4822, 0.4465),
-                                         (0.2470, 0.2435, 0.2615))
+        transform = transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
         return transform
 
     @staticmethod
     def get_denormalization_transform():
-        transform = DeNormalize((0.4914, 0.4822, 0.4465),
-                                (0.2470, 0.2435, 0.2615))
+        transform = DeNormalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
         return transform
 
     @staticmethod

@@ -122,33 +122,19 @@ class SequentialTinyImagenet(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
-    """
+    
     TRANSFORM = transforms.Compose(
-        [transforms.RandomCrop(224, padding=4),
+        [transforms.RandomCrop(64, padding=4),
          transforms.RandomHorizontalFlip(),
          transforms.ToTensor(),
-         transforms.Normalize((0.4802, 0.4480, 0.3975),
-                              (0.2770, 0.2691, 0.2821))])
-    """
+         transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
 
-    MY_TRAIN_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.RandomCrop(224),
+    TEST_TRANSFORM = transforms.Compose([
                             transforms.ToTensor(),
-                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
-                            ])
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
 
-    MY_TEST_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.CenterCrop(224),
-                            transforms.ToTensor(),
-                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
-                            ])
-
-    TRANSFORM = MY_TRAIN_TRANSFORM
 
     mammoth_tiny = 'TINYIMG'
-    mytiny_hd    = 'MY-TINYIMG-HD'
     mytiny_nohd  = 'MY-TINYIMG-NOHD'
 
     def get_data_loaders(self):
@@ -156,13 +142,13 @@ class SequentialTinyImagenet(ContinualDataset):
 
         test_transform = self.MY_TEST_TRANSFORM
 
-        train_dataset = MyTinyImagenet(base_path() + self.mytiny_hd,
+        train_dataset = MyTinyImagenet(base_path() + self.mytiny_nohd,
                                        train=True, download=True, transform=transform)
         if self.args.validation:
             train_dataset, test_dataset = get_train_val(train_dataset,
                                                         test_transform, self.NAME)
         else:
-            test_dataset = TinyImagenet(base_path() + self.mytiny_hd,
+            test_dataset = TinyImagenet(base_path() + self.mytiny_nohd,
                                         train=False, download=True, transform=test_transform)
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
@@ -184,14 +170,12 @@ class SequentialTinyImagenet(ContinualDataset):
 
     @staticmethod
     def get_normalization_transform():
-        transform = transforms.Normalize((0.4802, 0.4480, 0.3975),
-                                         (0.2770, 0.2691, 0.2821))
+        transform = transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
         return transform
 
     @staticmethod
     def get_denormalization_transform():
-        transform = DeNormalize((0.4802, 0.4480, 0.3975),
-                                (0.2770, 0.2691, 0.2821))
+        transform = DeNormalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
         return transform
 
     @staticmethod

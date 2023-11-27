@@ -124,7 +124,7 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-
+    """
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
             image_resize = 256
@@ -157,6 +157,7 @@ class SequentialTinyImagenet(ContinualDataset):
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                                 ])
+    """
 
     TRANSFORM = transforms.Compose(
                                       [transforms.Resize(232, interpolation=transforms.InterpolationMode.BILINEAR),

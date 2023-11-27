@@ -7,7 +7,7 @@ import os
 from typing import Optional
 
 ### START --- aghinea
-from utils.main import custom_args
+import utils.main.custom_args as custom_args
 ### END   --- aghinea
 
 import numpy as np

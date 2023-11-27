@@ -20,10 +20,6 @@ from datasets.utils.continual_dataset import (ContinualDataset,
 from datasets.utils.validation import get_train_val
 from utils.conf import base_path_dataset as base_path
 
-### START --- aghinea
-import utils.main.custom_args as custom_args
-### END   --- aghinea
-
 class TinyImagenet(Dataset):
     """
     Defines Tiny Imagenet as for the others pytorch datasets.
@@ -126,7 +122,7 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-    args = main.custom_args()
+    print(ContinualDataset)
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
             image_resize = 256

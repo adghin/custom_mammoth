@@ -127,7 +127,8 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-    if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
+    args = parse_args()
+    if args.backbone == 'resnet18' or args.backbone == 'vit_b_16' or args.backbone == 'vit_b_32':
         image_resize = 256
     else:
         image_resize = 232

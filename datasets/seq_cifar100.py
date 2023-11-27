@@ -5,6 +5,10 @@
 
 from typing import Tuple
 
+### START --- aghinea
+from argparse import ArgumentParser
+### END   --- aghinea
+
 import torch.nn.functional as F
 import torch.optim
 import torchvision.transforms as transforms
@@ -124,6 +128,15 @@ class SequentialCIFAR100(ContinualDataset):
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
 
         return train, test
+
+    ### START --- aghinea
+    def parse_args():
+        parser = ArgumentParser(description='mammoth', allow_abbrev=False)
+    
+        #To use this argument add the same in utils/args.py --> add_management_args
+        parser.add_argument('--optim_upscale',type=int,help='Upscale images to model's default size. Default = 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
+        parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+    ### END   --- aghinea
 
     @staticmethod
     def get_transform():

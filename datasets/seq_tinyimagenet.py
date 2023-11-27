@@ -6,10 +6,6 @@
 import os
 from typing import Optional
 
-### START --- aghinea
-import utils.main.custom_args as custom_args
-### END   --- aghinea
-
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
@@ -23,6 +19,10 @@ from datasets.utils.continual_dataset import (ContinualDataset,
                                               store_masked_loaders)
 from datasets.utils.validation import get_train_val
 from utils.conf import base_path_dataset as base_path
+
+### START --- aghinea
+import utils.main.custom_args as custom_args
+### END   --- aghinea
 
 class TinyImagenet(Dataset):
     """

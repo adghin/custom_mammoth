@@ -21,6 +21,7 @@ def add_experiment_args(parser: ArgumentParser) -> None:
     
     #START --- aghin
     parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+    parser.add_argument('--optim_upscale',type=int,help='Upscale images to model's default size. Default = 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
     #END   --- aghin
 
     parser.add_argument('--lr', type=float, required=True,

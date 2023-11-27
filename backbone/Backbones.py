@@ -12,7 +12,7 @@ def parse_args():
     parser = ArgumentParser(description='mammoth', allow_abbrev=False)
 
     #To use this argument add the same in utils/args.py --> add_management_args
-    parser.add_argument('--optim_upscale',type=int,help='Upscale images to model's default size. Default = 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
+    parser.add_argument('--optim_upscale',type=int,help='Upscale images to default size of pre-trained model recipe. 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
   
 def custom_resnet(model,dataset,out_classes):
     """

@@ -10,8 +10,8 @@ def parse_args():
     parser = ArgumentParser(description='mammoth', allow_abbrev=False)
 
     #To use this argument add the same in utils/args.py --> add_management_args
-    parser.add_argument('--optim_u',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
-
+    parser.add_argument('--optim_upscale',type=int,help='Upscale images to model's default size. Default = 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
+  
 def custom_resnet(model,dataset,out_classes):
     """
     Implement changes for custom resnet model
@@ -20,6 +20,8 @@ def custom_resnet(model,dataset,out_classes):
     :param out_classes: number of output classes
     :return: custom resnet model
     """
+
+    args = parse_args()
     #We need to change the first "conv1" layer (if dataset is not TINYIMG-HD) and the last "fc" layer
 
     #Changing "conv1" layer params from kernel_size=7, stride=2, padding=3 --> kernel_size=3, stride=1, padding=1
@@ -29,8 +31,8 @@ def custom_resnet(model,dataset,out_classes):
     new_stride      = 1     #changed
     new_padding     = 1     #changed
 
-    #Change conv1 layer if dataset ***is not*** TINYIMGNET-HD
-    if(dataset != 'seq-tinyimg-hd'):
+    #Change conv1 layer if dataset ***is not*** TINYIMGNET-HD or images ***are not*** upscaled to model's default res
+    if(dataset != 'seq-tinyimg-hd' or args.optim_upscale != 1):
         model.conv1 = nn.Conv2d(in_channels, inplanes, kernel_size=new_kernel_size, stride=new_stride, padding=new_padding, bias=False)
 
     #Changing "fc" layer according to the number of datasets' classes
@@ -76,8 +78,8 @@ def custom_vit(model,dataset,out_classes):
     in_channels    = 3      #as per default
     out_channels   = 768    #as per default
     
-    #Apply changes to "conv_proj" and sequence_length if dataset ***is not*** TINYIMG-HD
-    if(dataset != 'seq-tinyimg-hd'):
+    #Apply changes to "conv_proj" and sequence_length if dataset ***is not*** TINYIMG-HD or images ***are not*** upscaled to model's default res
+    if(dataset != 'seq-tinyimg-hd' or args.optim_upscale != 1):
         model.image_size   = image_size
         model.patch_size   = patch_size
         model.conv_proj    = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=model.patch_size,stride=model.patch_size)

@@ -6,6 +6,8 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 
+from argparse import ArgumentParser
+
 def parse_args():
     parser = ArgumentParser(description='mammoth', allow_abbrev=False)
 
@@ -37,7 +39,7 @@ def custom_resnet(model,dataset,out_classes):
 
     #Changing "fc" layer according to the number of datasets' classes
     num_features = model.fc.in_features
-    model.fc = nn.Linear(num_features, out_classes)
+    model.fc     = nn.Linear(num_features, out_classes)
 
     return model
 
@@ -52,6 +54,8 @@ def custom_vit(model,dataset,out_classes):
 
     from functools import partial
     from collections import OrderedDict
+
+    args = parse_args()
 
     #For small-complex datasets such as CIFAR-10, CIFAR-100 or TINYIMG-NOHD with image resolution
     #at 32x32 or 64x64 we need to reduce the patch size (originally at patch_size=16)
@@ -80,11 +84,11 @@ def custom_vit(model,dataset,out_classes):
     
     #Apply changes to "conv_proj" and sequence_length if dataset ***is not*** TINYIMG-HD or images ***are not*** upscaled to model's default res
     if(dataset != 'seq-tinyimg-hd' or args.optim_upscale != 1):
-        model.image_size   = image_size
-        model.patch_size   = patch_size
-        model.conv_proj    = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=model.patch_size,stride=model.patch_size)
+        model.image_size    = image_size
+        model.patch_size    = patch_size
+        model.conv_proj     = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=model.patch_size,stride=model.patch_size)
 
-        seq_length         = (model.image_size // model.patch_size) ** 2
+        seq_length          = (model.image_size // model.patch_size) ** 2
         seq_length         += 1
 
         num_layers          = 12
@@ -112,7 +116,7 @@ def custom_vit(model,dataset,out_classes):
     head_layers         = OrderedDict()
     head_layers["head"] = nn.Linear(hidden_dim,num_classes)
 
-    model.heads = nn.Sequential(head_layers)
+    model.heads         = nn.Sequential(head_layers)
 
     return model
     
@@ -143,11 +147,11 @@ def get_backbone(backbone,dataset):
     :param dataset: dataset needed in order to apply the correct changes to the network architecture
     :return: New model network architecture
     """
-    model_name = backbone
-    model_weights = "DEFAULT"
-    model = models.get_model(model_name,weights=model_weights)
+    model_name     = backbone
+    model_weights  = "DEFAULT"
+    model          = models.get_model(model_name,weights=model_weights)
 
-    adapted_model = custom_network(model_name,model,dataset)
+    adapted_model  = custom_network(model_name,model,dataset)
     return adapted_model
 
 def _process_input(self, x: torch.Tensor) -> torch.Tensor:

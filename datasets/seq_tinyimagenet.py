@@ -122,14 +122,7 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-    def __init__(self) -> None:
-        super().__init__(args)
-        self.args = args
-
-    def custom_args(self):
-        return self.args
-
-    args = self.custom_args()
+    args = custom_args()
     
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':

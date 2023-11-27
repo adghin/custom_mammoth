@@ -6,6 +6,8 @@
 import os
 from typing import Optional
 
+import argparse
+
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
@@ -122,7 +124,11 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-    args = custom_args()
+    def custom_args():
+      args = argparse.Namespace()
+      print(vars(args))
+
+    self.custom_args()
     
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':

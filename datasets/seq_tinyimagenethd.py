@@ -6,6 +6,10 @@
 import os
 from typing import Optional
 
+### START --- aghinea
+from argparse import ArgumentParser
+### END   --- aghinea
+
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
@@ -123,16 +127,24 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
+    if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
+        image_resize = 256
+    else:
+        image_resize = 232
+
+        image_crop   = 224
+
     MY_TRAIN_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.RandomCrop(224),
+                            transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.RandomCrop(image_crop),
+                            transforms.RandomHorizontalFlip(),
                             transforms.ToTensor(),
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
 
     MY_TEST_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.CenterCrop(224),
+                            transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.CenterCrop(image_crop),
                             transforms.ToTensor(),
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
@@ -155,6 +167,14 @@ class SequentialTinyImagenet(ContinualDataset):
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
         return train, test
+
+    ### START --- aghinea
+    def parse_args():
+        parser = ArgumentParser(description='mammoth', allow_abbrev=False)
+    
+        #To use this argument add the same in utils/args.py --> add_management_args
+        parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+    ### END   --- aghinea
 
     @staticmethod
     def get_backbone():

@@ -43,7 +43,7 @@ def custom_vit(model,dataset,out_classes):
     """
 
     from functools import partial
-    from collections import OrederedDict
+    from collections import OrderedDict
 
     #For small-complex datasets such as CIFAR-10, CIFAR-100 or TINYIMG-NOHD with image resolution
     #at 32x32 or 64x64 we need to reduce the patch size (originally at patch_size=16)
@@ -72,12 +72,12 @@ def custom_vit(model,dataset,out_classes):
     
     #Apply changes to "conv_proj" and sequence_length if dataset ***is not*** TINYIMG-HD
     if(dataset != 'seq-tinyimg-hd'):
-        model.image_size = image_size
-        model.patch_size = patch_size
-        model.conv_proj  = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=patch_size,stride=patch_size)
+        model.image_size   = image_size
+        model.patch_size   = patch_size
+        model.conv_proj    = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=patch_size,stride=patch_size)
 
-        seq_length = (image_size // patch_size) ** 2
-        seq_length += 1
+        seq_length         = (image_size // patch_size) ** 2
+        seq_length         += 1
 
         num_layers          = 12
         num_heads           = 12
@@ -99,8 +99,9 @@ def custom_vit(model,dataset,out_classes):
 
         model.seq_length    = seq_length
 
+    hidden_dim          = model.hidden_dim
     num_classes         = out_classes
-    head_layers = OrderedDict()
+    head_layers         = OrderedDict()
     head_layers["head"] = nn.Linear(hidden_dim,num_classes)
 
     model.heads = nn.Sequential(head_layers)

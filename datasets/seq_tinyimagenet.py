@@ -128,7 +128,7 @@ class SequentialTinyImagenet(ContinualDataset):
       args = argparse.Namespace()
       print(vars(args))
 
-    self.custom_args()
+    custom_args()
     
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':

@@ -122,7 +122,7 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-    def __init__(self, args: Namespace) -> None:
+    def __init__(self) -> None:
         super().__init__(args)
         self.args = args
 

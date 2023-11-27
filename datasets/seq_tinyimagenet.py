@@ -24,18 +24,6 @@ from datasets.utils.continual_dataset import (ContinualDataset,
 from datasets.utils.validation import get_train_val
 from utils.conf import base_path_dataset as base_path
 
-### START --- aghinea
-def parse_args():
-    parser = ArgumentParser(description='mammoth', allow_abbrev=False)
-
-    #To use this argument add the same in utils/args.py --> add_management_args
-    parser.add_argument('--optim_upscale',type=int,help='Upscale images to default size of pre-trained model recipe. 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
-    parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
-
-    args = parser.parse_args()
-    return args
-### END   --- aghinea
-
 class TinyImagenet(Dataset):
     """
     Defines Tiny Imagenet as for the others pytorch datasets.

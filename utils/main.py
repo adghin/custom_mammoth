@@ -57,6 +57,7 @@ def parse_args():
     #START --- aghin
     #To use this argument add the same in utils/args.py --> add_management_args
     parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+    parser.add_argument('--optim_upscale',type=int,help='Upscale images to default size of pre-trained model recipe. 0 (no upscale), 1 (upscale)',default=0)
     #END   --- aghin
 
     torch.set_num_threads(4)

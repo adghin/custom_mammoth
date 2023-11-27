@@ -6,6 +6,12 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 
+def parse_args():
+    parser = ArgumentParser(description='mammoth', allow_abbrev=False)
+
+    #To use this argument add the same in utils/args.py --> add_management_args
+    parser.add_argument('--optim_u',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+
 def custom_resnet(model,dataset,out_classes):
     """
     Implement changes for custom resnet model

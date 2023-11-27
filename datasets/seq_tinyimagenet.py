@@ -158,6 +158,19 @@ class SequentialTinyImagenet(ContinualDataset):
                                 transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                                 ])
 
+    TRANSFORM = transforms.Compose(
+                                      [transforms.Resize(232, interpolation=transforms.InterpolationMode.BILINEAR),
+                                       transforms.RandomCrop(224),
+                                       transforms.RandomHorizontalFlip(),
+                                       transforms.ToTensor(),
+                                       transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+
+    TEST_TRANSFORM = transforms.Compose(
+                                      [transforms.Resize(232, interpolation=transforms.InterpolationMode.BILINEAR),
+                                       transforms.CentralCrop(224),
+                                       transforms.ToTensor(),
+                                       transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])    
+  
     mammoth_tiny = 'TINYIMG'
     mytiny_nohd  = 'MY-TINYIMG-NOHD'
 

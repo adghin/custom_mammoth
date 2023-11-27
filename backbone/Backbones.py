@@ -74,9 +74,9 @@ def custom_vit(model,dataset,out_classes):
     if(dataset != 'seq-tinyimg-hd'):
         model.image_size   = image_size
         model.patch_size   = patch_size
-        model.conv_proj    = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=patch_size,stride=patch_size)
+        model.conv_proj    = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=model.patch_size,stride=model.patch_size)
 
-        seq_length         = (image_size // patch_size) ** 2
+        seq_length         = (model.image_size // model.patch_size) ** 2
         seq_length         += 1
 
         num_layers          = 12

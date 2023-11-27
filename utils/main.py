@@ -45,6 +45,18 @@ def lecun_fix():
     opener.addheaders = [('User-agent', 'Mozilla/5.0')]
     urllib.request.install_opener(opener)
 
+### START --- aghinea
+def custom_args():
+    #To use this arguments add the same in utils/args.py --> add_management_args
+    parser = ArgumentParser(description='adghin custom args')
+
+    parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+    parser.add_argument('--optim_upscale',type=int,help='Upscale images to default size of pre-trained model recipe. 0 (no upscale), 1 (upscale)',default=0)
+
+    args = parser.parse_args()
+
+    return args
+### END   --- aghinea
 
 def parse_args():
     parser = ArgumentParser(description='mammoth', allow_abbrev=False)
@@ -54,12 +66,6 @@ def parse_args():
                         help='Loads the best arguments for each method, '
                              'dataset and memory buffer.')
     
-    #START --- aghin
-    #To use this argument add the same in utils/args.py --> add_management_args
-    parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
-    parser.add_argument('--optim_upscale',type=int,help='Upscale images to default size of pre-trained model recipe. 0 (no upscale), 1 (upscale)',default=0)
-    #END   --- aghin
-
     torch.set_num_threads(4)
     add_management_args(parser)
     args = parser.parse_known_args()[0]
@@ -98,7 +104,6 @@ def parse_args():
 
     return args
 
-
 def main(args=None):
     lecun_fix()
     if args is None:
@@ -121,11 +126,10 @@ def main(args=None):
         args.minibatch_size = dataset.get_minibatch_size()
 
     #backbone = dataset.get_backbone()
-
     #START --- aghin
-    backbone_name = parse_args().backbone
-    dataset_name  = parse_args().dataset
-    backbone = get_backbone(backbone_name,dataset_name,optim_upscale) 
+    backbone_name = custom_args().backbone
+    dataset_name  = custom_args().dataset
+    backbone      = get_backbone(backbone_name,dataset_name,optim_upscale) 
     #END   --- aghin
 
     loss = dataset.get_loss()
@@ -150,7 +154,6 @@ def main(args=None):
     else:
         assert not hasattr(model, 'end_task') or model.NAME == 'joint_gcl'
         ctrain(args)
-
-
+        
 if __name__ == '__main__':
     main()

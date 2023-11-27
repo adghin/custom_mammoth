@@ -6,7 +6,7 @@
 from typing import Tuple
 
 ### START --- aghinea
-from argparse import ArgumentParser
+from utils.main import parse_args
 ### END   --- aghinea
 
 import torch.nn.functional as F
@@ -73,7 +73,7 @@ class SequentialCIFAR100(ContinualDataset):
     N_CLASSES_PER_TASK = 10
     N_TASKS = 10
 
-    args = parse_args()
+    args = main.parse_args()
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
             image_resize = 256

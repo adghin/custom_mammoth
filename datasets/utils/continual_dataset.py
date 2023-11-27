@@ -20,6 +20,7 @@ class ContinualDataset:
     SETTING: str
     N_CLASSES_PER_TASK: int
     N_TASKS: int
+    ARGS: Namespace
 
     def __init__(self, args: Namespace) -> None:
         """
@@ -31,8 +32,13 @@ class ContinualDataset:
         self.i = 0
         self.args = args
 
+        self.ARGS = args
+
         if not all((self.NAME, self.SETTING, self.N_CLASSES_PER_TASK, self.N_TASKS)):
             raise NotImplementedError('The dataset must be initialized with all the required fields.')
+
+    def custom_args(self):
+        return self.ARGS
 
     def get_data_loaders(self) -> Tuple[DataLoader, DataLoader]:
         """

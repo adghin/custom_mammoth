@@ -5,7 +5,9 @@
 
 from typing import Tuple
 
-import argparse
+### START --- aghinea
+from argparse import ArgumentParser
+### END   --- aghinea
 
 import torch.nn.functional as F
 import torchvision.transforms as transforms
@@ -96,6 +98,13 @@ class SequentialCIFAR10(ContinualDataset):
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
         return train, test
+
+    def parse_args():
+        parser = ArgumentParser(description='mammoth', allow_abbrev=False)
+    
+        #To use this argument add the same in utils/args.py --> add_management_args
+        parser.add_argument('--optim_upscale',type=int,help='Upscale images to model's default size. Default = 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
+      
 
     @staticmethod
     def get_transform():

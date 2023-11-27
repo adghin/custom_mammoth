@@ -5,10 +5,6 @@
 
 from typing import Tuple
 
-### START --- aghinea
-from utils.main import parse_args
-### END   --- aghinea
-
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 from backbone.ResNet18 import resnet18
@@ -70,8 +66,8 @@ class SequentialCIFAR10(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
-
-    args = main.parse_args()
+    print(ContinualDataset)
+    """
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
             image_resize = 256
@@ -104,7 +100,7 @@ class SequentialCIFAR10(ContinualDataset):
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                                 ])
-
+    """
     def get_data_loaders(self):
         transform = self.TRANSFORM
 

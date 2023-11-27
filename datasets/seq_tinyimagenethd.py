@@ -175,6 +175,9 @@ class SequentialTinyImagenet(ContinualDataset):
     
         #To use this argument add the same in utils/args.py --> add_management_args
         parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+        
+        args = parser.parse_args()
+        return args
     ### END   --- aghinea
 
     @staticmethod

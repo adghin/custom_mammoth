@@ -26,7 +26,7 @@ def custom_resnet(model,dataset,out_classes):
     new_padding     = 1     #changed
 
     #Change conv1 layer if dataset ***is not*** TINYIMGNET-HD or images ***are not*** upscaled to model's default res
-    if(all(str not in dataset for str in NAMES)):
+    if(dataset == 'seq-cifar10' or dataset == 'seq-cifar100' or dataset == 'seq-tinyimg'):
         model.conv1 = nn.Conv2d(in_channels, inplanes, kernel_size=new_kernel_size, stride=new_stride, padding=new_padding, bias=False)
 
     #Changing "fc" layer according to the number of datasets' classes
@@ -73,7 +73,7 @@ def custom_vit(model,dataset,out_classes):
     out_channels   = 768    #as per default
     
     #Apply changes to "conv_proj" and sequence_length if dataset ***is not*** TINYIMG-HD or images ***are not*** upscaled to model's default res
-    if(all(str not in dataset for str in NAMES)):
+    if(dataset == 'seq-cifar10' or dataset == 'seq-cifar100' or dataset == 'seq-tinyimg'):
         model.image_size    = image_size
         model.patch_size    = patch_size
         model.conv_proj     = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=model.patch_size,stride=model.patch_size)
@@ -142,6 +142,7 @@ def get_backbone(backbone,dataset):
     model          = models.get_model(model_name,weights=model_weights)
 
     adapted_model  = custom_network(model_name,model,dataset)
+    print(adapted_model)
     return adapted_model
 
 def _process_input(self, x: torch.Tensor) -> torch.Tensor:

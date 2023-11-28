@@ -8,7 +8,7 @@ import torchvision.models as models
 
 NAMES = ["v1","v2"]
 
-def custom_resnet(model,dataset,out_classes,upscale):
+def custom_resnet(model,dataset,out_classes):
     """
     Implement changes for custom resnet model
     :param model: resnet model
@@ -35,7 +35,7 @@ def custom_resnet(model,dataset,out_classes,upscale):
 
     return model
 
-def custom_vit(model,dataset,out_classes,upscale):
+def custom_vit(model,dataset,out_classes):
     """
     Implement changes for custom vit model
     :param model: vit model
@@ -124,13 +124,13 @@ def custom_network(model_name,model,dataset,upscale):
         out_classes = 200
 
     if("resnet" in model_name):
-        model = custom_resnet(model,dataset,out_classes,optim_upscale)
+        model = custom_resnet(model,dataset,out_classes)
     if("vit" in model_name):
-        model = custom_vit(model,dataset,out_classes,optim_upscale)
+        model = custom_vit(model,dataset,out_classes)
 
     return model
 
-def get_backbone(backbone,dataset,optim_upscale):
+def get_backbone(backbone,dataset):
     """
     Load pre-trained model with default weights from torchvision.models
     :param model: model name to load from pytorch
@@ -141,7 +141,7 @@ def get_backbone(backbone,dataset,optim_upscale):
     model_weights  = "DEFAULT"
     model          = models.get_model(model_name,weights=model_weights)
 
-    adapted_model  = custom_network(model_name,model,dataset,optim_upscale)
+    adapted_model  = custom_network(model_name,model,dataset)
     return adapted_model
 
 def _process_input(self, x: torch.Tensor) -> torch.Tensor:

@@ -120,7 +120,7 @@ def main(args=None):
     #START --- aghin
     backbone_name = parse_args().backbone
     dataset_name  = parse_args().dataset
-    backbone      = get_backbone(backbone_name,dataset_name,optim_upscale) 
+    backbone      = get_backbone(backbone_name,dataset_name) 
     #END   --- aghin
 
     loss = dataset.get_loss()

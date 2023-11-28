@@ -6,10 +6,6 @@
 import os
 from typing import Optional
 
-### START --- aghinea
-from utils.main import parse_args
-### END   --- aghinea
-
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
@@ -126,7 +122,7 @@ class SequentialTinyImagenet(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
-
+    """
     args = main.parse_args()
     if args.backbone == 'resnet18' or args.backbone == 'vit_b_16' or args.backbone == 'vit_b_32':
         image_resize = 256
@@ -151,6 +147,7 @@ class SequentialTinyImagenet(ContinualDataset):
                             ])
 
     TRANSFORM = MY_TRAIN_TRANSFORM
+    """
   
     def get_data_loaders(self):
         transform = self.TRANSFORM

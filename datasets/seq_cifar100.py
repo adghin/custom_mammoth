@@ -68,41 +68,18 @@ class SequentialCIFAR100(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 10
     N_TASKS = 10
-    """
-    args = main.parse_args()
-    if args.optim_upscale == 1:
-        if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
-            image_resize = 256
-        else:
-            image_resize = 232
 
-        image_crop       = 224
+    TRANSFORM = transforms.Compose(
+                          [transforms.RandomCrop(32, padding=4),
+                           transforms.RandomHorizontalFlip(),
+                           transforms.ToTensor(),
+                           transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+  
+    TEST_TRANSFORM = transforms.Compose([
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
 
-        TRANSFORM = transforms.Compose(
-                                      [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
-                                       transforms.RandomCrop(image_crop),
-                                       transforms.RandomHorizontalFlip(),
-                                       transforms.ToTensor(),
-                                       transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
-
-        TEST_TRANSFORM = transforms.Compose(
-                                      [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
-                                       transforms.CentralCrop(image_crop),
-                                       transforms.RandomHorizontalFlip(),
-                                       transforms.ToTensor(),
-                                       transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])    
-    else:
-        TRANSFORM = transforms.Compose(
-                              [transforms.RandomCrop(32, padding=4),
-                               transforms.RandomHorizontalFlip(),
-                               transforms.ToTensor(),
-                               transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
-      
-        TEST_TRANSFORM = transforms.Compose([
-                                transforms.ToTensor(),
-                                transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
-                                ])
-    """
     def get_examples_number(self):
         train_dataset = MyCIFAR100(base_path() + 'CIFAR10', train=True,
                                   download=True)
@@ -125,18 +102,6 @@ class SequentialCIFAR100(ContinualDataset):
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
 
         return train, test
-
-    ### START --- aghinea
-    def parse_args():
-        parser = ArgumentParser(description='mammoth', allow_abbrev=False)
-    
-        #To use this argument add the same in utils/args.py --> add_management_args
-        parser.add_argument('--optim_upscale',type=int,help='Upscale images to default size of pre-trained model recipe. 0 (no upscale), 1 (upscale)',default=0,choices=[0,1])
-        parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
-        
-        args = parser.parse_args()
-        return args  
-  ### END   --- aghinea
   
     @staticmethod
     def get_transform():

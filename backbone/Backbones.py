@@ -110,7 +110,7 @@ def custom_vit(model,dataset,out_classes):
 
     return model
     
-def custom_network(model_name,model,dataset,upscale):
+def custom_network(model_name,model,dataset):
     """
     Apply changes to the backbone's pre-trained network architecture in order to perform experiments on datasets different
     from the original one (i.e. ImageNet-1K)

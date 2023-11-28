@@ -68,7 +68,7 @@ class SequentialCIFAR100(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 10
     N_TASKS = 10
-
+    """
     args = main.parse_args()
     if args.optim_upscale == 1:
         if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
@@ -102,7 +102,7 @@ class SequentialCIFAR100(ContinualDataset):
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                                 ])
-  
+    """
     def get_examples_number(self):
         train_dataset = MyCIFAR100(base_path() + 'CIFAR10', train=True,
                                   download=True)

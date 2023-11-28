@@ -66,41 +66,18 @@ class SequentialCIFAR10(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
-    print(type(ContinualDataset))
-    """
-    if args.optim_upscale == 1:
-        if backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32':
-            image_resize = 256
-        else:
-            image_resize = 232
+                                       
+    TRANSFORM = transforms.Compose(
+                          [transforms.RandomCrop(32, padding=4),
+                           transforms.RandomHorizontalFlip(),
+                           transforms.ToTensor(),
+                           transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+  
+    TEST_TRANSFORM = transforms.Compose([
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
 
-        image_crop       = 224
-
-        TRANSFORM = transforms.Compose(
-                                      [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
-                                       transforms.RandomCrop(image_crop),
-                                       transforms.RandomHorizontalFlip(),
-                                       transforms.ToTensor(),
-                                       transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
-
-        TEST_TRANSFORM = transforms.Compose(
-                                      [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
-                                       transforms.CentralCrop(image_crop),
-                                       transforms.RandomHorizontalFlip(),
-                                       transforms.ToTensor(),
-                                       transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])    
-    else:
-        TRANSFORM = transforms.Compose(
-                              [transforms.RandomCrop(32, padding=4),
-                               transforms.RandomHorizontalFlip(),
-                               transforms.ToTensor(),
-                               transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
-      
-        TEST_TRANSFORM = transforms.Compose([
-                                transforms.ToTensor(),
-                                transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
-                                ])
-    """
     def get_data_loaders(self):
         transform = self.TRANSFORM
 

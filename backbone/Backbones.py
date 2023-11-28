@@ -116,11 +116,11 @@ def custom_network(model_name,model,dataset):
     from the original one (i.e. ImageNet-1K)
     """
 
-    if(dataset == 'seq-cifar10'):
+    if('seq-cifar10' in dataset):
         out_classes = 10
-    if(dataset == 'seq-cifar100'):
+    if('seq-cifar100' in dataset):
         out_classes = 100
-    if(dataset == 'seq-tinyimg-hd' or dataset == 'seq-tinyimg'):
+    if('seq-tinyimg' in dataset):
         out_classes = 200
 
     if("resnet" in model_name):

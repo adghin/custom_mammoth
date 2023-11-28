@@ -142,7 +142,6 @@ def get_backbone(backbone,dataset):
     model          = models.get_model(model_name,weights=model_weights)
 
     adapted_model  = custom_network(model_name,model,dataset)
-    print(adapted_model)
     return adapted_model
 
 def _process_input(self, x: torch.Tensor) -> torch.Tensor:

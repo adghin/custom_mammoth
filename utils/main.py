@@ -45,18 +45,6 @@ def lecun_fix():
     opener.addheaders = [('User-agent', 'Mozilla/5.0')]
     urllib.request.install_opener(opener)
 
-### START --- aghinea
-def custom_args():
-    #To use this arguments add the same in utils/args.py --> add_management_args
-    parser = ArgumentParser(description='adghin custom args')
-
-    parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
-    
-    args = parser.parse_args()
-
-    return args
-### END   --- aghinea
-
 def parse_args():
     parser = ArgumentParser(description='mammoth', allow_abbrev=False)
     parser.add_argument('--model', type=str, required=True,
@@ -64,6 +52,10 @@ def parse_args():
     parser.add_argument('--load_best_args', action='store_true',
                         help='Loads the best arguments for each method, '
                              'dataset and memory buffer.')
+
+    ### START --- aghinea
+    parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+    ### END   --- aghinea
     
     torch.set_num_threads(4)
     add_management_args(parser)
@@ -126,8 +118,8 @@ def main(args=None):
 
     #backbone = dataset.get_backbone()
     #START --- aghin
-    backbone_name = custom_args().backbone
-    dataset_name  = custom_args().dataset
+    backbone_name = parse_args().backbone
+    dataset_name  = parse_args().dataset
     backbone      = get_backbone(backbone_name,dataset_name,optim_upscale) 
     #END   --- aghin
 

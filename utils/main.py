@@ -143,6 +143,7 @@ def main(args=None):
 
     loss = dataset.get_loss()
     model = get_model(args, backbone, loss, dataset.get_transform())
+    print(model)
 
     if args.distributed == 'dp':
         model.net = make_dp(model.net)

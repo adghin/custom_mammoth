@@ -63,7 +63,6 @@ class MyCIFAR100(CIFAR100):
 
 
 class SequentialCIFAR100(ContinualDataset):
-
     NAME = 'seq-cifar100'
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 10
@@ -86,6 +85,12 @@ class SequentialCIFAR100(ContinualDataset):
         return len(train_dataset.data)
 
     def get_data_loaders(self):
+        ###START --- aghinea
+        args = self.get_args()
+        if(args.upscale == 1):
+            self.change_transform(args.backbone)
+        ###END   --- aghinea
+      
         transform = self.TRANSFORM
 
         test_transform = self.TEST_TRANSFORM
@@ -102,6 +107,37 @@ class SequentialCIFAR100(ContinualDataset):
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
 
         return train, test
+
+    ###START --- aghinea
+    def get_args(self):
+        """
+        Get args from namespace
+        """
+        args = super().get_args()
+        return args
+
+    @classmethod
+    def change_transform(cls,backbone):
+        if(backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32'):
+            image_resize = 256
+            image_crop   = 224
+        else:  #backbone == 'resnet50' or 'resnet152'
+            image_resize = 232
+            image_crop   = 224
+
+        cls.TRANSFORM = transforms.Compose(
+                          [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
+                           transforms.RandomCrop(image_crop),
+                           transforms.RandomHorizontalFlip(),
+                           transforms.ToTensor(),
+                           transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+      
+        cls.TEST_TRANSFORM = transforms.Compose(
+                              [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
+                               transforms.CenterCrop(image_crop),
+                               transforms.ToTensor(),
+                               transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+    #END     --- aghinea
   
     @staticmethod
     def get_transform():

@@ -8,7 +8,7 @@ import torch
 import numpy as np
 
 ###START --- aghinea
-Changed this function to allow choosing on which GPU to run the program
+#Changed this function to allow choosing on which GPU to run the program
 ###END   --- aghinea
 def get_device(gpu_id) -> torch.device:
     """

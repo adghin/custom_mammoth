@@ -132,7 +132,6 @@ class SequentialCIFAR10(ContinualDataset):
         cls.TEST_TRANSFORM = transforms.Compose(
                               [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
                                transforms.CenterCrop(image_crop),
-                               transforms.RandomHorizontalFlip(),
                                transforms.ToTensor(),
                                transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
     

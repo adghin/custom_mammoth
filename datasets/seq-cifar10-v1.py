@@ -88,10 +88,13 @@ class SequentialCIFAR10(ContinualDataset):
     @classmethod
     def set_class_backbone(cls, backbone):
         cls.BACKBONE = backbone
+
+    def get_args(self):
+        super().get_args()
     
     def get_data_loaders(self):
         print("CIao")
-        print(self.BACKBONE)
+        get_args()
         transform = self.TRANSFORM
 
         test_transform = self.TEST_TRANSFORM

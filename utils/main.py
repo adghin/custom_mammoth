@@ -121,6 +121,9 @@ def main(args=None):
     backbone_name = parse_args().backbone
     dataset_name  = parse_args().dataset
     backbone      = get_backbone(backbone_name,dataset_name) 
+
+    dataset.backbone = backbone_name
+    print(dataset.backbone)
     #END   --- aghin
 
     loss = dataset.get_loss()

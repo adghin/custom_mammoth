@@ -68,9 +68,7 @@ class SequentialCIFAR10(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
-
-    BACKBONE = None
-                                    
+                        
     TRANSFORM = transforms.Compose(
                           [transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
                            transforms.RandomCrop(224),
@@ -84,13 +82,12 @@ class SequentialCIFAR10(ContinualDataset):
                             transforms.ToTensor(),
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
-
-    @classmethod
-    def set_class_backbone(cls, backbone):
-        cls.BACKBONE = backbone
-
+  
+    ###START --- aghinea
     def get_args(self):
-        super().args
+        args = super().get_args()
+        print(args)
+    #END     --- aghinea
     
     def get_data_loaders(self):
         print("CIao")

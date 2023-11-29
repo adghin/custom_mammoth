@@ -128,6 +128,8 @@ def main(args=None):
             dataset.change_transform(backbone_name)
     if(dataset_name == 'seq-tinyimg-hd'):
         dataset.change_transform(backbone_name)
+
+    print(dataset.get_transform)
     #END   --- aghin
 
     loss = dataset.get_loss()

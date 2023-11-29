@@ -68,6 +68,8 @@ class SequentialCIFAR10(ContinualDataset):
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
+
+    BACKBONE = None
                                        
     TRANSFORM = transforms.Compose(
                           [transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
@@ -83,7 +85,17 @@ class SequentialCIFAR10(ContinualDataset):
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
 
+    @property
+    def backbone(self):
+        return self.BACKBONE
+
+    @backbone.setter
+    def backbone(self, backbone):
+        self.BACKBONE = backbone
+        
+    
     def get_data_loaders(self):
+        print(self.BACKBONE)
         transform = self.TRANSFORM
 
         test_transform = self.TEST_TRANSFORM

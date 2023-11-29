@@ -35,7 +35,9 @@ class ContinualModel(nn.Module):
         self.args = args
         self.transform = transform
         self.opt = SGD(self.net.parameters(), lr=self.args.lr)
-        self.device = get_device()
+                     
+        ###Pass GPU_ID as parameter to get_device() --- aghinea
+        self.device = get_device(self.args.gpu)
 
         if not self.NAME or not self.COMPATIBILITY:
             raise NotImplementedError('Please specify the name and the compatibility of the model.')

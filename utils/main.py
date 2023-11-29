@@ -123,6 +123,7 @@ def main(args=None):
     #START --- aghin
     backbone_name = parse_args().backbone
     dataset_name  = parse_args().dataset
+    upscale       = parse_args().upscale
     backbone      = get_backbone(backbone_name,dataset_name,upscale) 
 
     #!!! WARNING !!!

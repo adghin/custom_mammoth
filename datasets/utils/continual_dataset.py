@@ -34,9 +34,12 @@ class ContinualDataset:
         if not all((self.NAME, self.SETTING, self.N_CLASSES_PER_TASK, self.N_TASKS)):
             raise NotImplementedError('The dataset must be initialized with all the required fields.')
 
+    ###START --- aghinea
+    #This function returns the namespace of the program
     def get_args(self):
-        print(self.args)
-
+        return self.args
+    ###END   --- aghinea
+    
     def get_data_loaders(self) -> Tuple[DataLoader, DataLoader]:
         """
         Creates and returns the training and test loaders for the current task.

@@ -7,12 +7,15 @@ import random
 import torch
 import numpy as np
 
-def get_device() -> torch.device:
+###START --- aghinea
+Changed this function to allow choosing on which GPU to run the program
+###END   --- aghinea
+def get_device(gpu_id) -> torch.device:
     """
     Returns the GPU device if available else CPU.
     """
     if torch.cuda.is_available():
-        return torch.device("cuda:0")
+        return torch.device("cuda:"+str(gpu_id))
     try:
         if torch.backends.mps.is_available() and torch.backends.mps.is_built():
             return torch.device("mps")

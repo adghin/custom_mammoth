@@ -76,18 +76,10 @@ class SequentialCIFAR10(ContinualDataset):
                           [transforms.ToTensor(),
                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
   
-    def get_data_loaders(self):
-        ###START --- aghinea
-        args = self.get_args()
-        if(args.upscale == 1):
-            self.change_transform(args.backbone)
-        ###END   --- aghinea
-      
+    def get_data_loaders(self):      
         transform = self.TRANSFORM
         test_transform = self.TEST_TRANSFORM
-        print(transform)
-        print(test_transform)
-
+  
         train_dataset = MyCIFAR10(base_path() + 'CIFAR10', train=True,
                                   download=True, transform=transform)
         if self.args.validation:
@@ -110,13 +102,12 @@ class SequentialCIFAR10(ContinualDataset):
 
     @classmethod
     def change_transform(cls,backbone):
+        image_crop   = 224
         if(backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32'):
             image_resize = 256
-            image_crop   = 224
         else:  #backbone == 'resnet50' or 'resnet152'
             image_resize = 232
-            image_crop   = 224
-
+            
         cls.TRANSFORM = transforms.Compose(
                           [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
                            transforms.RandomCrop(image_crop),

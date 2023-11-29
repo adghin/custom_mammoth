@@ -120,29 +120,36 @@ class SequentialTinyImagenet(ContinualDataset):
     """
     V1 version for backbones: resnet18, vit_b_16, vit_b_32
     """
-    NAME = 'seq-tinyimg-hd-v1'
+    NAME = 'seq-tinyimg-hd'
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
+
+    IMAGE_RESIZE = None
+    IMAGE_CROP   = None
     
     TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.RandomCrop(224),
+                            transforms.Resize(IMAGE_RESIZE, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.RandomCrop(IMAGE_CROP),
                             transforms.RandomHorizontalFlip(),
                             transforms.ToTensor(),
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
 
     TEST_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.CenterCrop(224),
+                            transforms.Resize(IMAGE_RESIZE, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.CenterCrop(IMAGE_CROP),
                             transforms.ToTensor(),
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
 
     def get_data_loaders(self):
+        ###START --- aghinea
+        args = self.get_args()
+        self.change_transform(args.backbone)
+        ###END   --- aghinea
+      
         transform = self.TRANSFORM
-
         test_transform = self.TEST_TRANSFORM
 
         train_dataset = MyTinyImagenet(base_path() + 'MY-TINYIMG-HD',
@@ -156,6 +163,24 @@ class SequentialTinyImagenet(ContinualDataset):
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
         return train, test
+
+    ###START --- aghinea
+    def get_args(self):
+        """
+        Get args from namespace
+        """
+        args = super().get_args()
+        return args
+
+    @classmethod
+    def change_transform(cls,backbone):
+        if(args.backbone == 'resnet18' or args.backbone == 'vit_b_16' or args.backbone == 'vit_b_32'):
+            cls.IMAGE_RESIZE = 256
+            cls.IMAGE_CROP   = 224
+        else: #'resnet50' or 'resnet152'
+            cls.IMAGE_RESIZE = 232
+            cls.IMAGE_CROP   = 224
+    ###END   --- aghinea
 
     @staticmethod
     def get_backbone():

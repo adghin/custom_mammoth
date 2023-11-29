@@ -125,12 +125,22 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-    def get_data_loaders(self):
-        ###START --- aghinea
-        args = self.get_args()
-        self.change_transform(args.backbone)
-        ###END   --- aghinea
-      
+    TRANSFORM = transforms.Compose([
+                            transforms.Resize(232, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.RandomCrop(224),
+                            transforms.RandomHorizontalFlip(),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+
+    TEST_TRANSFORM = transforms.Compose([
+                            transforms.Resize(232, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.CenterCrop(224),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+
+    def get_data_loaders(self):     
         transform = self.TRANSFORM
         test_transform = self.TEST_TRANSFORM
         print(transform)

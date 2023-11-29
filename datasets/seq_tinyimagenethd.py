@@ -176,7 +176,7 @@ class SequentialTinyImagenet(ContinualDataset):
 
     @classmethod
     def change_transform(cls,backbone):
-        if(args.backbone == 'resnet18' or args.backbone == 'vit_b_16' or args.backbone == 'vit_b_32'):
+        if(backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32'):
             cls.IMAGE_RESIZE = 256
         else: #'resnet50' or 'resnet152'
             cls.IMAGE_RESIZE = 232

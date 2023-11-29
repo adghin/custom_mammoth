@@ -62,7 +62,7 @@ class MyCIFAR10(CIFAR10):
 
 class SequentialCIFAR10(ContinualDataset):
     """
-    V1 version for backbones: resnet50, resnet152
+    V1 version for backbones: resnet18, vit_b_16, vit_b_32
     """
     NAME = 'seq-cifar10-v1'
     SETTING = 'class-il'

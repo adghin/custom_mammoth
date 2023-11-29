@@ -61,10 +61,7 @@ class MyCIFAR10(CIFAR10):
 
 
 class SequentialCIFAR10(ContinualDataset):
-    """
-    V1 version for backbones: resnet18, vit_b_16, vit_b_32
-    """
-    NAME = 'seq-cifar10-v1'
+    NAME = 'seq-cifar10'
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
@@ -87,11 +84,7 @@ class SequentialCIFAR10(ContinualDataset):
         ###END   --- aghinea
       
         transform = self.TRANSFORM
-
         test_transform = self.TEST_TRANSFORM
-
-        print(transform)
-        print(test_transform)
 
         train_dataset = MyCIFAR10(base_path() + 'CIFAR10', train=True,
                                   download=True, transform=transform)
@@ -118,7 +111,7 @@ class SequentialCIFAR10(ContinualDataset):
         if(backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32'):
             image_resize = 256
             image_crop   = 224
-        else:
+        else:  #backbone == 'resnet50' or 'resnet152'
             image_resize = 232
             image_crop   = 224
 

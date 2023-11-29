@@ -70,31 +70,28 @@ class SequentialCIFAR10(ContinualDataset):
     N_TASKS = 5
                         
     TRANSFORM = transforms.Compose(
-                          [transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                           transforms.RandomCrop(224),
+                          [transforms.RandomCrop(32, padding=4),
                            transforms.RandomHorizontalFlip(),
                            transforms.ToTensor(),
                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
   
-    TEST_TRANSFORM = transforms.Compose([
-                            transforms.Resize(256, interpolation=transforms.InterpolationMode.BILINEAR),
-                            transforms.CenterCrop(224),
-                            transforms.ToTensor(),
-                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
-                            ])
+    TEST_TRANSFORM = transforms.Compose(
+                          [transforms.ToTensor(),
+                           transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
   
-    ###START --- aghinea
-    def get_args(self):
-        args = super().get_args()
-        print(args.dataset)
-    #END     --- aghinea
-    
     def get_data_loaders(self):
-        print("CIao")
-        self.get_args()
+        ###START --- aghinea
+        args = self.get_args()
+        if(args.upscale == 1):
+            self.change_transform(args.backbone)
+        ###END   --- aghinea
+      
         transform = self.TRANSFORM
 
         test_transform = self.TEST_TRANSFORM
+
+        print(transform)
+        print(test_transform)
 
         train_dataset = MyCIFAR10(base_path() + 'CIFAR10', train=True,
                                   download=True, transform=transform)
@@ -107,6 +104,39 @@ class SequentialCIFAR10(ContinualDataset):
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
         return train, test
+
+    ###START --- aghinea
+    def get_args(self):
+        """
+        Get args from namespace
+        """
+        args = super().get_args()
+        return args
+
+    @classmethod
+    def change_transform(cls,backbone):
+        if(backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32'):
+            image_resize = 256
+            image_crop   = 224
+        else:
+            image_resize = 232
+            image_crop   = 224
+
+        cls.TRANSFORM = transforms.Compose(
+                          [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
+                           transforms.RandomCrop(image_crop),
+                           transforms.RandomHorizontalFlip(),
+                           transforms.ToTensor(),
+                           transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+      
+        cls.TEST_TRANSFORM = transforms.Compose(
+                              [transforms.Resize(image_resize, interpolation=transforms.InterpolationMode.BILINEAR),
+                               transforms.CenterCrop(image_crop),
+                               transforms.RandomHorizontalFlip(),
+                               transforms.ToTensor(),
+                               transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))])
+    
+    #END     --- aghinea
 
     @staticmethod
     def get_transform():

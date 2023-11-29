@@ -69,6 +69,7 @@ class SequentialCIFAR10(ContinualDataset):
     N_CLASSES_PER_TASK = 2
     N_TASKS = 5
 
+    BACKBONE = None
      
                                        
     TRANSFORM = transforms.Compose(
@@ -85,18 +86,6 @@ class SequentialCIFAR10(ContinualDataset):
                             transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
                             ])
 
-    def __init__(self):
-        self._BACKBONE = None
-      
-    @property
-    def backbone(self):
-        return self._BACKBONE
-
-    @backbone.setter
-    def backbone(self, backbone):
-        self._BACKBONE = backbone
-        
-    
     def get_data_loaders(self):
         print("CIao")
         print(self.BACKBONE)

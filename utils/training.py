@@ -88,7 +88,23 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
     if not args.nowand:
         assert wandb is not None, "Wandb not installed, please install it or run without wandb"
-        wandb.init(dir='/home/aghinea/tmp/', project=args.wandb_project, entity=args.wandb_entity, config=vars(args))
+        project = args.wandb_project
+        
+        if args.upscale == 1:
+            if args.dataset == 'seq-cifar10':
+                project = 'continual_cifar10_upsampled'
+            elif args.dataset == 'seq-cifar100':
+                project = 'continual_cifar100_upsampled'
+            elif args.dataset == 'seq-tinyimg':
+                project = 'continual_tinyimagenet_upsampled'
+        else:
+            project = 'continual_benchmarks'
+        
+                
+        if args.dataset == 'seq-tinyimg-hd':
+            project = 'continual_tinyimagenethd'
+                   
+        wandb.init(dir='/home/aghinea/tmp/', project=project, entity=args.wandb_entity, config=vars(args))
         args.wandb_url = wandb.run.get_url()
 
     model.net.to(model.device)

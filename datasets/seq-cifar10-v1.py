@@ -86,7 +86,7 @@ class SequentialCIFAR10(ContinualDataset):
     ###START --- aghinea
     def get_args(self):
         args = super().get_args()
-        print(args)
+        print(args['dataset'])
     #END     --- aghinea
     
     def get_data_loaders(self):

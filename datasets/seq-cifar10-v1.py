@@ -90,7 +90,7 @@ class SequentialCIFAR10(ContinualDataset):
         cls.BACKBONE = backbone
 
     def get_args(self):
-        super().get_args()
+        super().args
     
     def get_data_loaders(self):
         print("CIao")

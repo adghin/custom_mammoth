@@ -95,6 +95,7 @@ class SequentialCIFAR10(ContinualDataset):
         
     
     def get_data_loaders(self):
+        print("CIao")
         print(self.BACKBONE)
         transform = self.TRANSFORM
 

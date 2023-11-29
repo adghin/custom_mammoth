@@ -125,6 +125,7 @@ def main(args=None):
 
     dataset.BACKBONE = backbone_name
     print(dataset.BACKBONE)
+    print(dataset.get_transform())
     #END   --- aghin
 
     loss = dataset.get_loss()

@@ -92,8 +92,9 @@ class SequentialCIFAR100(ContinualDataset):
         ###END   --- aghinea
       
         transform = self.TRANSFORM
-
         test_transform = self.TEST_TRANSFORM
+        print(transform)
+        print(test_transform)
 
         train_dataset = MyCIFAR100(base_path() + 'CIFAR100', train=True,
                                   download=True, transform=transform)

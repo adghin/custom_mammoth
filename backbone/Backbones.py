@@ -6,9 +6,7 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 
-NAMES = ["v1","v2"]
-
-def custom_resnet(model,dataset,out_classes):
+def custom_resnet(model,dataset,out_classes,upscale):
     """
     Implement changes for custom resnet model
     :param model: resnet model
@@ -26,7 +24,7 @@ def custom_resnet(model,dataset,out_classes):
     new_padding     = 1     #changed
 
     #Change conv1 layer if dataset ***is not*** TINYIMGNET-HD or images ***are not*** upscaled to model's default res
-    if(dataset == 'seq-cifar10' or dataset == 'seq-cifar100' or dataset == 'seq-tinyimg'):
+    if(upscale == 0 and dataset != 'seq-tinyimg-hd'):
         model.conv1 = nn.Conv2d(in_channels, inplanes, kernel_size=new_kernel_size, stride=new_stride, padding=new_padding, bias=False)
 
     #Changing "fc" layer according to the number of datasets' classes
@@ -35,7 +33,7 @@ def custom_resnet(model,dataset,out_classes):
 
     return model
 
-def custom_vit(model,dataset,out_classes):
+def custom_vit(model,dataset,out_classes,upscale):
     """
     Implement changes for custom vit model
     :param model: vit model
@@ -72,8 +70,8 @@ def custom_vit(model,dataset,out_classes):
     in_channels    = 3      #as per default
     out_channels   = 768    #as per default
     
-    #Apply changes to "conv_proj" and sequence_length if dataset ***is not*** TINYIMG-HD or images ***are not*** upscaled to model's default res
-    if(dataset == 'seq-cifar10' or dataset == 'seq-cifar100' or dataset == 'seq-tinyimg'):
+    #Apply changes to "conv_proj" and sequence_length if dataset ***is not*** TINYIMG-HD and images ***are not*** upscaled to model's default res
+    if(upscale == 0 and dataset != 'seq-tinyimg-hd'):
         model.image_size    = image_size
         model.patch_size    = patch_size
         model.conv_proj     = nn.Conv2d(in_channels=in_channels,out_channels=out_channels,kernel_size=model.patch_size,stride=model.patch_size)
@@ -85,6 +83,7 @@ def custom_vit(model,dataset,out_classes):
         num_heads           = 12
         hidden_dim          = 768
         mlp_dim             = 3072
+        dropout             = 0.0
         attention_dropout   = 0.0
         norm_layer          = partial(nn.LayerNorm,eps=1e-6)
         
@@ -124,13 +123,13 @@ def custom_network(model_name,model,dataset):
         out_classes = 200
 
     if("resnet" in model_name):
-        model = custom_resnet(model,dataset,out_classes)
+        model = custom_resnet(model,dataset,out_classes,upscale)
     if("vit" in model_name):
-        model = custom_vit(model,dataset,out_classes)
+        model = custom_vit(model,dataset,out_classes,upscale)
 
     return model
 
-def get_backbone(backbone,dataset):
+def get_backbone(backbone,dataset,upscale):
     """
     Load pre-trained model with default weights from torchvision.models
     :param model: model name to load from pytorch
@@ -141,25 +140,5 @@ def get_backbone(backbone,dataset):
     model_weights  = "DEFAULT"
     model          = models.get_model(model_name,weights=model_weights)
 
-    adapted_model  = custom_network(model_name,model,dataset)
+    adapted_model  = custom_network(model_name,model,dataset,upscale)
     return adapted_model
-
-def _process_input(self, x: torch.Tensor) -> torch.Tensor:
-    n, c, h, w = x.shape
-    p = self.patch_size
-
-    n_h = h // p
-    n_w = w // p
-
-    # (n, c, h, w) -> (n, hidden_dim, n_h, n_w)
-    x = self.conv_proj(x)
-    # (n, hidden_dim, n_h, n_w) -> (n, hidden_dim, (n_h * n_w))
-    x = x.reshape(n, self.hidden_dim, n_h * n_w)
-
-    # (n, hidden_dim, (n_h * n_w)) -> (n, (n_h * n_w), hidden_dim)
-    # The self attention layer expects inputs in the format (N, S, E)
-    # where S is the source sequence length, N is the batch size, E is the
-    # embedding dimension
-    x = x.permute(0, 2, 1)
-
-    return x

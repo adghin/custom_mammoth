@@ -125,8 +125,8 @@ class SequentialTinyImagenet(ContinualDataset):
     N_CLASSES_PER_TASK = 20
     N_TASKS = 10
 
-    IMAGE_RESIZE = None
-    IMAGE_CROP   = None
+    IMAGE_RESIZE = 256
+    IMAGE_CROP   = 224
     
     TRANSFORM = transforms.Compose([
                             transforms.Resize(IMAGE_RESIZE, interpolation=transforms.InterpolationMode.BILINEAR),
@@ -178,10 +178,8 @@ class SequentialTinyImagenet(ContinualDataset):
     def change_transform(cls,backbone):
         if(args.backbone == 'resnet18' or args.backbone == 'vit_b_16' or args.backbone == 'vit_b_32'):
             cls.IMAGE_RESIZE = 256
-            cls.IMAGE_CROP   = 224
         else: #'resnet50' or 'resnet152'
             cls.IMAGE_RESIZE = 232
-            cls.IMAGE_CROP   = 224
     ###END   --- aghinea
 
     @staticmethod

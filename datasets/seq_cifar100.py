@@ -84,13 +84,7 @@ class SequentialCIFAR100(ContinualDataset):
                                   download=True)
         return len(train_dataset.data)
 
-    def get_data_loaders(self):
-        ###START --- aghinea
-        args = self.get_args()
-        if(args.upscale == 1):
-            self.change_transform(args.backbone)
-        ###END   --- aghinea
-      
+    def get_data_loaders(self):      
         transform = self.TRANSFORM
         test_transform = self.TEST_TRANSFORM
         print(transform)

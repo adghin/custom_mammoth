@@ -121,7 +121,7 @@ def main(args=None):
     #START --- aghin
     backbone_name = parse_args().backbone
     dataset_name  = parse_args().dataset
-    backbone      = get_backbone(backbone_name,dataset_name) 
+    backbone      = get_backbone(backbone_name,dataset_name,upscale) 
 
     #!!! WARNING !!!
     # change_transform is a class method, it is used to change preprocessing transforms as CLASS VARIABLES before they are applied to the dataloader
@@ -132,6 +132,11 @@ def main(args=None):
             dataset.change_transform(backbone_name)
     if(dataset_name == 'seq-tinyimg-hd'):
         dataset.change_transform(backbone_name)
+
+    print("DATASET.TRANSFORM")
+    print(dataset.get_transform())
+    print("DATASET.TEST_TRANSFORM")
+    print(dataset.TEST_TRANSFORM)
     #END   --- aghin
 
     loss = dataset.get_loss()

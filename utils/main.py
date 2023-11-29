@@ -55,6 +55,7 @@ def parse_args():
 
     ### START --- aghinea
     parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
+    parser.add_argument('--upscale',type=int,default=0,help='0 (no-upscale), 1 (upscale)')
     ### END   --- aghinea
     
     torch.set_num_threads(4)

@@ -128,7 +128,7 @@ def main(args=None):
     # (thus avoid having lots of file of same dataset with different preprocessings)
     # if you intend to have an instance of the same class elsewhere, the preprocessing applied by this method won't work and the class will use it's default variables
     if(dataset_name == 'seq-cifar10' or dataset_name == 'seq-cifar100' or dataset_name == 'seq-tinyimg'):
-        if(upscale == 1):
+        if(args.upscale == 1):
             dataset.change_transform(backbone_name)
     if(dataset_name == 'seq-tinyimg-hd'):
         dataset.change_transform(backbone_name)

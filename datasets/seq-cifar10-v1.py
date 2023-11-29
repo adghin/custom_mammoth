@@ -87,11 +87,11 @@ class SequentialCIFAR10(ContinualDataset):
 
     @property
     def backbone(self):
-        return self.BACKBONE
+        return self._BACKBONE
 
     @backbone.setter
     def backbone(self, backbone):
-        self.BACKBONE = backbone
+        self._BACKBONE = backbone
         
     
     def get_data_loaders(self):

@@ -119,7 +119,7 @@ def custom_network(model_name,model,dataset,upscale):
         out_classes = 10
     if('seq-cifar100' in dataset):
         out_classes = 100
-    if('seq-tinyimg' in dataset):
+    if('seq-tinyimg' in dataset or 'seq-imagenetR' in dataset):
         out_classes = 200
 
     if("resnet" in model_name):

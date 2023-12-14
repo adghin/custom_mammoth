@@ -149,6 +149,39 @@ class SequentialTinyImagenet(ContinualDataset):
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
         return train, test
 
+   ###START --- aghinea
+    def get_args(self):
+        """
+        Get args from namespace
+        """
+        args = super().get_args()
+        return args
+
+    @classmethod
+    def change_transform(cls,backbone):
+        IMAGE_CROP   = 224
+    
+        if(backbone == 'resnet18' or backbone == 'vit_b_16' or backbone == 'vit_b_32'):
+            IMAGE_RESIZE = 256
+        else: #'resnet50' or 'resnet152'
+            IMAGE_RESIZE = 232
+
+        cls.TRANSFORM = transforms.Compose([
+                            transforms.Resize(IMAGE_RESIZE, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.RandomCrop(IMAGE_CROP),
+                            transforms.RandomHorizontalFlip(),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+
+        cls.TEST_TRANSFORM = transforms.Compose([
+                            transforms.Resize(IMAGE_RESIZE, interpolation=transforms.InterpolationMode.BILINEAR),
+                            transforms.CenterCrop(IMAGE_CROP),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+                            ])
+    ###END   --- aghinea
+
     @staticmethod
     def get_backbone():
         return resnet18(SequentialTinyImagenet.N_CLASSES_PER_TASK

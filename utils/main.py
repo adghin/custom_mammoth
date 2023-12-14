@@ -133,7 +133,7 @@ def main(args=None):
     if(dataset_name == 'seq-cifar10' or dataset_name == 'seq-cifar100' or dataset_name == 'seq-tinyimg'):
         if(args.upscale == 1):
             dataset.change_transform(backbone_name)
-    if(dataset_name == 'seq-tinyimg-hd'):
+    if(dataset_name == 'seq-tinyimg-hd' or dataset_name == 'seq-imagenetR'):
         dataset.change_transform(backbone_name)
 
     print("DATASET.TRANSFORM")

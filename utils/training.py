@@ -60,6 +60,9 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, last=False) -> Tu
                     outputs = model(inputs)
 
                 _, pred = torch.max(outputs.data, 1)
+
+                wandb.log({"pr": wandb.plot.pr_curve(labels, pred)})
+                
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
 
@@ -107,6 +110,8 @@ def train(model: ContinualModel, dataset: ContinualDataset,
     
         wandb.init(dir='/home/aghinea/tmp/', project=project, entity=args.wandb_entity, config=vars(args))
         args.wandb_url = wandb.run.get_url()
+
+    wandb.log_model(model)
 
     model.net.to(model.device)
     results, results_mask_classes = [], []

@@ -65,7 +65,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, last=False) -> Tu
                 labels_log = labels.cpu()
 
                 classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-                wandb.sklearn.plot_confusion_matrix(labels_log, pred_log, classes)
+                wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log, pred_log, classes)})
                 
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]

@@ -108,6 +108,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         wandb.init(dir='/home/aghinea/tmp/', project=project, entity=args.wandb_entity, config=vars(args))
         args.wandb_url = wandb.run.get_url()
 
+    print(model)
     log_model = {'Model': model}
     wandb.log({log_model})
 

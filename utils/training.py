@@ -61,7 +61,9 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, last=False) -> Tu
 
                 _, pred = torch.max(outputs.data, 1)
 
-                wandb.log({"pr": wandb.plot.pr_curve(labels, pred)})
+                labels_log = labels.cpu()
+                pred_log = pred.cpu()
+                wandb.log({"pr": wandb.plot.pr_curve(labels_log, pred_log)})
                 
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]

@@ -39,6 +39,9 @@ def confMatrix(model,dataloader,args):
     model.net.eval()
     correct, total = 0, 0
 
+    all_preds = []
+    all_labels = []
+
     if args.dataset == 'seq-cifar10':
         classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
 
@@ -50,9 +53,8 @@ def confMatrix(model,dataloader,args):
 
             _, pred = torch.max(outputs.data, 1)
 
-            labels_log = torch.Tensor.cpu(torch.tensor([x for x in labels]))
-            logits_log = torch.Tensor.cpu(torch.stack([x for x in outputs.data],0))
-            preds = torch.argmax(logits_log, 0)
+            all_preds.append(pred.item())
+            all_labels.append(labels.item())
 
             correct += torch.sum(pred == labels).item()
             total += labels.shape[0]
@@ -60,7 +62,7 @@ def confMatrix(model,dataloader,args):
             print('final_acc')
             print((correct/total)*100)
 
-            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log, preds, classes)})
+        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(all_labels, all_preds, classes)})
 
 
 def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False) -> Tuple[list, list]:

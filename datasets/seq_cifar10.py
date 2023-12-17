@@ -90,7 +90,13 @@ class SequentialCIFAR10(ContinualDataset):
                                    download=True, transform=test_transform)
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
-        return train, test
+        ###START --- aghinea
+        """
+        Create dataloader without mask
+        """
+        test_without_mask = dataloader_without_mask(test_dataset)
+        ###END   --- aghinea
+        return train, test, test_without_mask
 
     ###START --- aghinea
     def get_args(self):

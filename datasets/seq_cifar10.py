@@ -14,7 +14,7 @@ from torchvision.datasets import CIFAR10
 from datasets.seq_tinyimagenet import base_path
 from datasets.transforms.denormalization import DeNormalize
 from datasets.utils.continual_dataset import (ContinualDataset,
-                                              store_masked_loaders)
+                                              store_masked_loaders,dataloader_without_mask)
 from datasets.utils.validation import get_train_val
 
 class TCIFAR10(CIFAR10):

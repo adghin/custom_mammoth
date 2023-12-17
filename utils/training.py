@@ -61,13 +61,16 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, last=False) -> Tu
 
                 _, pred = torch.max(outputs.data, 1)
 
-                if(last):
-                    pred_log = pred.cpu()
-                    labels_log = labels.cpu()
+                if(last and (args.plot_curve==1)):
+                    predictons = pred.cpu()
+                    ground_truth = labels.cpu()
 
-                    classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-                    wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log, pred_log, classes)})
-                
+                    
+                    #classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
+                    #wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log, pred_log, classes)})
+                    
+                    wandb.log({"pr":wandb.plot.pr_curve(ground_truth, predictons, labels=None, classes_to_plot=None)})
+
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
 

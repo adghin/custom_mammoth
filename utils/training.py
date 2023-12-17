@@ -41,7 +41,7 @@ def confMatrix(model,dataloader,args):
     if args.dataset == 'seq-cifar10':
         classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
     
-    for data in test_loader:
+    for data in dataloader:
         with torch.no_grad():
             inputs, labels = data
             inputs, labels = inputs.to(model.device), labels.to(model.device)

@@ -94,8 +94,7 @@ class SequentialCIFAR10(ContinualDataset):
         """
         Create dataloader without mask
         """
-        test_dataset2 = CIFAR10('/home/aghinea/tmp/',train=False,download=True,transform=test_transform)
-        test_without_mask = dataloader_without_mask(test_dataset2,self)
+        test_without_mask = dataloader_without_mask(test_dataset,self)
         ###END   --- aghinea
         return train, test, test_without_mask
 

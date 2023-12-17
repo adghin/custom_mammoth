@@ -34,6 +34,31 @@ def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> No
     outputs[:, (k + 1) * dataset.N_CLASSES_PER_TASK:
                dataset.N_TASKS * dataset.N_CLASSES_PER_TASK] = -float('inf')
 
+def confMatrix(model,dataloader,args):
+    model.net.eval()
+    correct, total = 0, 0
+
+    if args.dataset == 'seq-cifar10':
+        classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
+    
+    for data in test_loader:
+        with torch.no_grad():
+            inputs, labels = data
+            inputs, labels = inputs.to(model.device), labels.to(model.device)
+            outputs = model(inputs)
+
+            _, pred = torch.max(outputs.data, 1)
+
+            predictions = pred.cpu()
+            ground_truth = labels.cpu()
+
+            correct += torch.sum(pred == labels).item()
+            total += labels.shape[0]
+
+            wandb.log({'final_acc': (correct/total)*100})
+
+            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(ground_truth, predictions, classes)})
+
 
 def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False) -> Tuple[list, list]:
     """
@@ -61,15 +86,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False)
 
                 _, pred = torch.max(outputs.data, 1)
 
-                if(last and (args.plot_curve==1)):
-                    predictons = pred.cpu()
-                    ground_truth = labels.cpu()
-
-                    
-                    #classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-                    #wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log, pred_log, classes)})
-                    
-                    wandb.log({"pr":wandb.plot.pr_curve(ground_truth, predictons, labels=None, classes_to_plot=None)})
+                #wandb.log({"pr":wandb.plot.pr_curve(ground_truth, predictons, labels=None, classes_to_plot=None)})
 
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
@@ -131,14 +148,14 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         dataset_copy = get_dataset(args)
         for t in range(dataset.N_TASKS):
             model.net.train()
-            _, _ = dataset_copy.get_data_loaders()
+            _, _, _ = dataset_copy.get_data_loaders()
         if model.NAME != 'icarl' and model.NAME != 'pnn':
             random_results_class, random_results_task = evaluate(model, dataset_copy, args)
 
     print(file=sys.stderr)
     for t in range(dataset.N_TASKS):
         model.net.train()
-        train_loader, test_loader = dataset.get_data_loaders()
+        train_loader, test_loader, test_loader_no_mask = dataset.get_data_loaders()
         if hasattr(model, 'begin_task'):
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics:
@@ -194,6 +211,9 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
             wandb.log(d2)
 
+    if args.plot_curve:
+        confMatrix(model,test_loader_no_mask,args)
+        
     if not args.disable_log and not args.ignore_other_metrics:
         logger.add_bwt(results, results_mask_classes)
         logger.add_forgetting(results, results_mask_classes)

@@ -41,7 +41,7 @@ def confMatrix(model,dataloader,args):
 
     if args.dataset == 'seq-cifar10':
         classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-    print(len(dataloader))
+
     for data in tqdm(dataloader):
         with torch.no_grad():
             inputs, labels = data
@@ -50,8 +50,9 @@ def confMatrix(model,dataloader,args):
 
             _, pred = torch.max(outputs.data, 1)
 
-            predictions = pred.cpu()
-            ground_truth = labels.cpu()
+            labels_log = torch.cat([x["labels"] for x in outputs])
+            logits_log = torch.cat([x["logits"] for x in outputs])
+            preds = torch.argmax(logits_log, 1)
 
             correct += torch.sum(pred == labels).item()
             total += labels.shape[0]
@@ -59,7 +60,7 @@ def confMatrix(model,dataloader,args):
             print('final_acc')
             print((correct/total)*100)
 
-            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(ground_truth, predictions, classes)})
+            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log.numpy(), preds, classes)})
 
 
 def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False) -> Tuple[list, list]:

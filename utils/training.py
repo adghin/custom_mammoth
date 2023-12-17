@@ -16,6 +16,7 @@ from models.utils.continual_model import ContinualModel
 from utils.loggers import *
 from utils.status import ProgressBar
 
+from tqdm import tqdm
 try:
     import wandb
 except ImportError:
@@ -40,8 +41,8 @@ def confMatrix(model,dataloader,args):
 
     if args.dataset == 'seq-cifar10':
         classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-    
-    for data in dataloader:
+    print(len(dataloader))
+    for data in tqdm(dataloader):
         with torch.no_grad():
             inputs, labels = data
             inputs, labels = inputs.to(model.device), labels.to(model.device)
@@ -55,7 +56,8 @@ def confMatrix(model,dataloader,args):
             correct += torch.sum(pred == labels).item()
             total += labels.shape[0]
 
-            wandb.log({'final_acc': (correct/total)*100})
+            print('final_acc')
+            print((correct/total)*100)
 
             wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(ground_truth, predictions, classes)})
 

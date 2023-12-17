@@ -22,8 +22,6 @@ try:
 except ImportError:
     wandb = None
 
-all_labels, all_preds = [], []
-
 def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> None:
     """
     Given the output tensor, the dataset at hand and the current task,
@@ -37,6 +35,7 @@ def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> No
     outputs[:, (k + 1) * dataset.N_CLASSES_PER_TASK:
                dataset.N_TASKS * dataset.N_CLASSES_PER_TASK] = -float('inf')
 
+@static_vars(all_labels=[],all_preds=[])
 def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False) -> Tuple[list, list]:
     """
     Evaluates the accuracy of the model for each past task.
@@ -66,8 +65,8 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False)
 
                 ###Add this to collect all labels and predictions in order to create the confusion matrix
                 if args.plot_curve:
-                    all_preds.extend(pred.cpu()) 
-                    all_labels.extend(labels.cpu())
+                    evaluate.all_preds.extend(pred.cpu()) 
+                    evaluate.all_labels.extend(labels.cpu())
 
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
@@ -210,7 +209,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
     if args.plot_curve:
         if args.dataset == 'seq-cifar10':
             classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(all_labels, all_preds, classes)})
+        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
 
     if not args.nowand:            
         wandb.finish()

@@ -73,6 +73,8 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False)
     status = model.net.training
     model.net.eval()
     accs, accs_mask_classes = [], []
+    print(dataset.test_loaders)
+    print(len(dataset.test_loaders))
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
             continue

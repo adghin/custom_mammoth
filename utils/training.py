@@ -176,7 +176,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if hasattr(model, 'end_task'):
             model.end_task(dataset)
 
-        accs = evaluate(model, dataset)
+        accs = evaluate(model, dataset, args)
         results.append(accs[0])
         results_mask_classes.append(accs[1])
 

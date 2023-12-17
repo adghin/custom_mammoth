@@ -64,7 +64,7 @@ class SequentialCIFAR10(ContinualDataset):
     NAME = 'seq-cifar10'
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
-    N_TASKS = 2
+    N_TASKS = 5
                         
     TRANSFORM = transforms.Compose(
                           [transforms.RandomCrop(32, padding=4),
@@ -90,13 +90,7 @@ class SequentialCIFAR10(ContinualDataset):
                                    download=True, transform=test_transform)
 
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
-        ###START --- aghinea
-        """
-        Create dataloader without mask
-        """
-        test_without_mask = dataloader_without_mask(test_dataset,self)
-        ###END   --- aghinea
-        return train, test, test_without_mask
+        return train, test
 
     ###START --- aghinea
     def get_args(self):

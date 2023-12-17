@@ -60,7 +60,7 @@ def confMatrix(model,dataloader,args):
             print('final_acc')
             print((correct/total)*100)
 
-            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log.numpy(), preds, classes)})
+            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(labels_log, preds, classes)})
 
 
 def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False) -> Tuple[list, list]:

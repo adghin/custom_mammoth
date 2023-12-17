@@ -51,7 +51,7 @@ def confMatrix(model,dataloader,args):
             _, pred = torch.max(outputs.data, 1)
 
             labels_log = [x for x in labels]
-            logits_log = [x for x in outputs.data]
+            logits_log = torch.stack([x for x in outputs.data],0)
             preds = torch.argmax(logits_log, 0)
 
             correct += torch.sum(pred == labels).item()

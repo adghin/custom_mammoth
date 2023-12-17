@@ -209,10 +209,10 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             d['wandb_url'] = wandb.run.get_url()
             wandb.log(d)
 
-    if not args.nowand:
-        if args.plot_curve:
-            if args.dataset == 'seq-cifar10':
-                classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(all_labels, all_preds, classes)})
-            
+    if args.plot_curve:
+        if args.dataset == 'seq-cifar10':
+            classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
+        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(all_labels, all_preds, classes)})
+
+    if not args.nowand:            
         wandb.finish()

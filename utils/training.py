@@ -213,9 +213,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
             wandb.log(d2)
 
-    if args.plot_curve:
-        confMatrix(model,test_loader_no_mask,args)
-        
+    
     if not args.disable_log and not args.ignore_other_metrics:
         logger.add_bwt(results, results_mask_classes)
         logger.add_forgetting(results, results_mask_classes)
@@ -231,4 +229,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             wandb.log(d)
 
     if not args.nowand:
+        if args.plot_curve:
+            confMatrix(model,test_loader_no_mask,args)
         wandb.finish()

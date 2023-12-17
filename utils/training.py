@@ -53,8 +53,8 @@ def confMatrix(model,dataloader,args):
 
             _, pred = torch.max(outputs.data, 1)
 
-            all_preds.append(pred.item())
-            all_labels.append(labels.item())
+            all_preds.extend(pred.cpu()) 
+            all_labels.extend(labels.cpu())
 
             correct += torch.sum(pred == labels).item()
             total += labels.shape[0]
@@ -62,7 +62,7 @@ def confMatrix(model,dataloader,args):
             print('final_acc')
             print((correct/total)*100)
 
-        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(all_labels, all_preds, classes)})
+    wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(all_labels, all_preds, classes)})
 
 
 def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False) -> Tuple[list, list]:

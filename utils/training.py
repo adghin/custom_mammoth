@@ -50,8 +50,8 @@ def confMatrix(model,dataloader,args):
 
             _, pred = torch.max(outputs.data, 1)
 
-            labels_log = torch.cat([x["labels"] for x in outputs])
-            logits_log = torch.cat([x["logits"] for x in outputs])
+            labels_log = torch.cat([x for x in outputs])
+            logits_log = torch.cat([x for x in outputs])
             preds = torch.argmax(logits_log, 1)
 
             correct += torch.sum(pred == labels).item()

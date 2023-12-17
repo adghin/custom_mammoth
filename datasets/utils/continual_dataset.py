@@ -133,6 +133,10 @@ def store_masked_loaders(train_dataset: Dataset, test_dataset: Dataset,
     setting.i += setting.N_CLASSES_PER_TASK
     return train_loader, test_loader
 
+def dataloader_without_mask(dataset):
+    test_dataset = DataLoader(dataset,batch_size=setting.args.batch_size,shuffle=False,num_workers=4,drop_last=False)
+    return test_dataset
+
 
 def get_previous_train_loader(train_dataset: Dataset, batch_size: int,
                               setting: ContinualDataset) -> DataLoader:

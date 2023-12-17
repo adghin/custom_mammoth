@@ -58,6 +58,7 @@ def parse_args():
     parser.add_argument('--backbone',type=str,help='Pre-trained backbone to use, choose from pytorch models: resnet18, resnet34, resnet50, resnet101, resnet152, vit_b_16, vit_b_32', default='resnet18')
     parser.add_argument('--upscale',type=int,default=0,help='0 (no-upscale), 1 (upscale)')
     parser.add_argument('--gpu',type=int,default=0,help='Choose on which GPU to run the program')
+    parser.add_argument('--plot_curve',type=int,default=0,help='Plot metrics suchs as PR, ROC and ConfusionMatrix')
     ### END   --- aghinea
     
     torch.set_num_threads(4)

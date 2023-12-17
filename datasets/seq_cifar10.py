@@ -64,7 +64,7 @@ class SequentialCIFAR10(ContinualDataset):
     NAME = 'seq-cifar10'
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 2
-    N_TASKS = 5
+    N_TASKS = 2
                         
     TRANSFORM = transforms.Compose(
                           [transforms.RandomCrop(32, padding=4),

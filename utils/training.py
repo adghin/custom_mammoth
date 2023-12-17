@@ -16,11 +16,19 @@ from models.utils.continual_model import ContinualModel
 from utils.loggers import *
 from utils.status import ProgressBar
 
-from tqdm import tqdm
 try:
     import wandb
 except ImportError:
     wandb = None
+    
+###START --- aghinea
+def static_vars(**kwargs):
+    def decorate(func):
+        for k in kwargs:
+            setattr(func, k, kwargs[k])
+        return func
+    return decorate
+###END   --- aghinea
 
 def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> None:
     """

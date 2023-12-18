@@ -152,6 +152,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if hasattr(model, 'begin_task'):
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics:
+            print("ciao1")
             if args.plot_curve:
                 accs = evaluate(model, dataset, args, last=True, create_plot=True, current_task=t)
             else:
@@ -188,7 +189,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
         if hasattr(model, 'end_task'):
             model.end_task(dataset)
-
+        print("ciao2")
         accs = evaluate(model, dataset, args)
         results.append(accs[0])
         results_mask_classes.append(accs[1])

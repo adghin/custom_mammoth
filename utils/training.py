@@ -57,6 +57,8 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False)
     accs, accs_mask_classes = [], []
     
     for k, test_loader in enumerate(dataset.test_loaders):
+        print(k)
+        print(test_loader)
         if last and k < len(dataset.test_loaders) - 1:
             print("last")
             continue
@@ -77,9 +79,6 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False)
                 if args.plot_curve:
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
-
-                print(len(evaluate.all_preds))
-                print(len(evaluate.all_labels))
 
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]

@@ -236,8 +236,8 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
         conf_matrix(model,dataset,args)
         
-        print(len(evaluate.all_labels))
-        print(len(evaluate.all_preds))
+        print(len(conf_matrix.all_labels))
+        print(len(conf_matrix.all_preds))
         wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(conf_matrix.all_labels, conf_matrix.all_preds, classes)})
 
     if not args.nowand:            

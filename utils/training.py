@@ -44,7 +44,7 @@ def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> No
                dataset.N_TASKS * dataset.N_CLASSES_PER_TASK] = -float('inf')
 
 @static_vars(all_labels=[],all_preds=[])
-def evaluate(model: ContinualModel, dataset: ContinualDataset, args, current_task, last=False) -> Tuple[list, list]:
+def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False, **kwargs) -> Tuple[list, list]:
     """
     Evaluates the accuracy of the model for each past task.
     :param model: the model to be evaluated
@@ -57,7 +57,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, current_tas
     accs, accs_mask_classes = [], []
     
     for k, test_loader in enumerate(dataset.test_loaders):
-        if(current_task == dataset.N_TASKS -1):
+        if(kwargs[current_task] == dataset.N_TASKS -1):
             print(k)
             print(test_loader)
         if last and k < len(dataset.test_loaders) - 1:
@@ -154,7 +154,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if hasattr(model, 'begin_task'):
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics:
-            accs = evaluate(model, dataset, args, current_task, last=True)
+            accs = evaluate(model, dataset, args, last=True, current_task=t)
             results[t-1] = results[t-1] + accs[0]
             if dataset.SETTING == 'class-il':
                 results_mask_classes[t-1] = results_mask_classes[t-1] + accs[1]

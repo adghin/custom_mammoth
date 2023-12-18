@@ -55,7 +55,10 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
     status = model.net.training
     model.net.eval()
     accs, accs_mask_classes = [], []
-    
+
+    if current_task == dataset.N_TASKS-1:
+        create_plot = True
+
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
             continue
@@ -70,11 +73,11 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
                     outputs = model(inputs)
 
                 _, pred = torch.max(outputs.data, 1)
-                """
+                
                 if create_plot:
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
-                """
+                
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
 
@@ -87,10 +90,6 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
                     if 'class-il' in model.COMPATIBILITY else 0)
         accs_mask_classes.append(correct_mask_classes / total * 100)
 
-
-    print(accs)
-    print(accs_mask_classes)
-    
     model.net.train(status)
     return accs, accs_mask_classes
 
@@ -150,8 +149,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics:
             accs = evaluate(model, dataset, args, last=True)
-            print("before")
-            print(accs[0])
             results[t-1] = results[t-1] + accs[0]
             if dataset.SETTING == 'class-il':
                 results_mask_classes[t-1] = results_mask_classes[t-1] + accs[1]
@@ -188,10 +185,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         ###START --- aghinea
         accs = evaluate(model, dataset, args, last=False, current_task=t)
         ###END   --- aghinea
-
-        print("after")
-        print(accs[0])
-        
         results.append(accs[0])
         results_mask_classes.append(accs[1])
 

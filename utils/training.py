@@ -55,10 +55,13 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
     status = model.net.training
     model.net.eval()
     accs, accs_mask_classes = [], []
-    
+    print(current_task)
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
             continue
+
+        print(len(test_loader))
+        print(test_loader)
         correct, correct_mask_classes, total = 0.0, 0.0, 0.0
         for data in test_loader:
             with torch.no_grad():
@@ -75,9 +78,6 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
                 if create_plot:
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
-
-                print(len(evaluate.all_preds))
-                print(len(evaluate.all_labels))
 
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]

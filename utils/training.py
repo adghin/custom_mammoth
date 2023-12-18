@@ -56,9 +56,6 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
     model.net.eval()
     accs, accs_mask_classes = [], []
 
-    if current_task == dataset.N_TASKS-1:
-        create_plot = True
-
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
             continue
@@ -74,7 +71,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
 
                 _, pred = torch.max(outputs.data, 1)
                 
-                if create_plot:
+                if current_task == dataset.N_TASKS-1:
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
                 
@@ -183,7 +180,10 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             model.end_task(dataset)
 
         ###START --- aghinea
-        accs = evaluate(model, dataset, args, last=False, current_task=t)
+        if args.plot_curve:
+            accs = evaluate(model, dataset, args, last=False, current_task=t)
+        else:
+            accs = evaluate(model, dataset, args)
         ###END   --- aghinea
         results.append(accs[0])
         results_mask_classes.append(accs[1])

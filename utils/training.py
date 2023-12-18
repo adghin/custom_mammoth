@@ -76,6 +76,9 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False)
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
 
+                print(len(evaluate.all_preds))
+                print(len(evaluate.all_labels))
+
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
 

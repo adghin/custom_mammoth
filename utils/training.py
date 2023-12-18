@@ -47,8 +47,8 @@ def conf_matrix(model,dataset,args):
     
                     ###Add this to collect all labels and predictions in order to create the confusion matrix
                    
-                    evaluate.all_preds.extend(pred.cpu()) 
-                    evaluate.all_labels.extend(labels.cpu())
+                    conf_matrix.all_preds.extend(pred.cpu()) 
+                    conf_matrix.all_labels.extend(labels.cpu())
     
                     correct += torch.sum(pred == labels).item()
                     total += labels.shape[0]

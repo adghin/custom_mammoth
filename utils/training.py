@@ -194,6 +194,9 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         else:
             accs = evaluate(model, dataset, args)
         ###END   --- aghinea
+
+        print("after")
+        print(accs[0])
         
         results.append(accs[0])
         results_mask_classes.append(accs[1])

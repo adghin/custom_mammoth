@@ -44,7 +44,7 @@ def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> No
                dataset.N_TASKS * dataset.N_CLASSES_PER_TASK] = -float('inf')
 
 @static_vars(all_labels=[],all_preds=[])
-def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False, create_plot=False) -> Tuple[list, list]:
+def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False, create_plot=False,current_task=None) -> Tuple[list, list]:
     """
     Evaluates the accuracy of the model for each past task.
     :param model: the model to be evaluated
@@ -150,7 +150,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics:
             if args.plot_curve:
-                accs = evaluate(model, dataset, args, last=True, create_plot=True)
+                accs = evaluate(model, dataset, args, last=True, create_plot=True, current_task=t)
             else:
                 evaluate(model, dataset, args, last=True)
             results[t-1] = results[t-1] + accs[0]

@@ -70,11 +70,11 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
                     outputs = model(inputs)
 
                 _, pred = torch.max(outputs.data, 1)
-
+                """
                 if create_plot:
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
-                
+                """
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
 

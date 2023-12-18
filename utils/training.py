@@ -32,7 +32,8 @@ def static_vars(**kwargs):
 
 @static_vars(all_labels=[],all_preds=[])
 def conf_matrix(model,dataset,args):
-    for test_loader in enumerate(dataset.test_loaders):    
+    model.net.eval()
+    for k, test_loader in enumerate(dataset.test_loaders):    
             print(len(test_loader))
             print(test_loader)
             correct, correct_mask_classes, total = 0.0, 0.0, 0.0
@@ -215,6 +216,16 @@ def train(model: ContinualModel, dataset: ContinualDataset,
                 **{f'RESULT_task_acc_{i}': a for i, a in enumerate(accs[1])}}
 
             wandb.log(d2)
+    
+    if args.plot_curve:
+        if args.dataset == 'seq-cifar10':
+            classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
+
+        conf_matrix(model,dataset,args)
+        
+        print(len(conf_matrix.all_labels))
+        print(len(conf_matrix.all_preds))
+        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(conf_matrix.all_labels, conf_matrix.all_preds, classes)})
 
     
     if not args.disable_log and not args.ignore_other_metrics:
@@ -230,15 +241,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             d = logger.dump()
             d['wandb_url'] = wandb.run.get_url()
             wandb.log(d)
-
-    if args.plot_curve:
-        if args.dataset == 'seq-cifar10':
-            classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-        conf_matrix(model,dataset,args)
-        
-        print(len(conf_matrix.all_labels))
-        print(len(conf_matrix.all_preds))
-        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(conf_matrix.all_labels, conf_matrix.all_preds, classes)})
 
     if not args.nowand:            
         wandb.finish()

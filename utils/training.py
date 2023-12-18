@@ -185,7 +185,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             model.end_task(dataset)
 
         ###START --- aghinea
-        if args.plot_curve:
+        if not t and args.plot_curve:
             accs = evaluate(model, dataset, args, last=False, create_plot=True)
         else:
             accs = evaluate(model, dataset, args)

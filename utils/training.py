@@ -87,6 +87,10 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
                     if 'class-il' in model.COMPATIBILITY else 0)
         accs_mask_classes.append(correct_mask_classes / total * 100)
 
+
+    print(accs)
+    print(accs_mask_classes)
+    
     model.net.train(status)
     return accs, accs_mask_classes
 

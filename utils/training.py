@@ -58,9 +58,11 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False)
     
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
+            print("last")
             continue
         correct, correct_mask_classes, total = 0.0, 0.0, 0.0
         for data in test_loader:
+            print("entered")
             with torch.no_grad():
                 inputs, labels = data
                 inputs, labels = inputs.to(model.device), labels.to(model.device)

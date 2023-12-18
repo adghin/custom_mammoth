@@ -205,9 +205,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
     if args.plot_curve:
         if args.dataset == 'seq-cifar10':
             classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-
-        print(len(evaluate.all_labels))
-        print(len(evaluate.all_preds))
+            
         wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
     
     if not args.disable_log and not args.ignore_other_metrics:

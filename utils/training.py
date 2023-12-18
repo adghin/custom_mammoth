@@ -30,6 +30,31 @@ def static_vars(**kwargs):
     return decorate
 ###END   --- aghinea
 
+@static_vars(all_labels=[],all_preds=[])
+def conf_matrix(model,dataset,args):
+    for test_loader in enumerate(dataset.test_loaders):    
+            print(len(test_loader))
+            print(test_loader)
+            correct, correct_mask_classes, total = 0.0, 0.0, 0.0
+            for data in test_loader:
+                with torch.no_grad():
+                    inputs, labels = data
+                    inputs, labels = inputs.to(model.device), labels.to(model.device)
+                    outputs = model(inputs)
+    
+                    _, pred = torch.max(outputs.data, 1)
+    
+                    ###Add this to collect all labels and predictions in order to create the confusion matrix
+                   
+                    evaluate.all_preds.extend(pred.cpu()) 
+                    evaluate.all_labels.extend(labels.cpu())
+    
+                    correct += torch.sum(pred == labels).item()
+                    total += labels.shape[0]
+    print("cc")
+    print((correct/total)*100)
+    
+
 def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> None:
     """
     Given the output tensor, the dataset at hand and the current task,
@@ -43,7 +68,7 @@ def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> No
     outputs[:, (k + 1) * dataset.N_CLASSES_PER_TASK:
                dataset.N_TASKS * dataset.N_CLASSES_PER_TASK] = -float('inf')
 
-@static_vars(all_labels=[],all_preds=[])
+
 def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False, create_plot=False,current_task=None) -> Tuple[list, list]:
     """
     Evaluates the accuracy of the model for each past task.
@@ -55,16 +80,9 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
     status = model.net.training
     model.net.eval()
     accs, accs_mask_classes = [], []
-    print("Current_task")
-    print(current_task)
-    print("Last")
-    print(last)
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
             continue
-
-        print(len(test_loader))
-        print(test_loader)
         correct, correct_mask_classes, total = 0.0, 0.0, 0.0
         for data in test_loader:
             with torch.no_grad():
@@ -76,12 +94,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
                     outputs = model(inputs)
 
                 _, pred = torch.max(outputs.data, 1)
-
-                ###Add this to collect all labels and predictions in order to create the confusion matrix
-                if create_plot:
-                    evaluate.all_preds.extend(pred.cpu()) 
-                    evaluate.all_labels.extend(labels.cpu())
-
+                
                 correct += torch.sum(pred == labels).item()
                 total += labels.shape[0]
 
@@ -152,11 +165,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if hasattr(model, 'begin_task'):
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics:
-            print("ciao1")
-            if args.plot_curve:
-                accs = evaluate(model, dataset, args, last=True, create_plot=True, current_task=t)
-            else:
-                evaluate(model, dataset, args, last=True)
+            evaluate(model, dataset, args, last=True)
             results[t-1] = results[t-1] + accs[0]
             if dataset.SETTING == 'class-il':
                 results_mask_classes[t-1] = results_mask_classes[t-1] + accs[1]
@@ -189,7 +198,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
         if hasattr(model, 'end_task'):
             model.end_task(dataset)
-        print("ciao2")
         accs = evaluate(model, dataset, args)
         results.append(accs[0])
         results_mask_classes.append(accs[1])
@@ -226,10 +234,11 @@ def train(model: ContinualModel, dataset: ContinualDataset,
     if args.plot_curve:
         if args.dataset == 'seq-cifar10':
             classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
-
+        conf_matrix(model,dataset,args)
+        
         print(len(evaluate.all_labels))
         print(len(evaluate.all_preds))
-        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
+        wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(conf_matrix.all_labels, conf_matrix.all_preds, classes)})
 
     if not args.nowand:            
         wandb.finish()

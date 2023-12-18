@@ -57,14 +57,10 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
     accs, accs_mask_classes = [], []
     
     for k, test_loader in enumerate(dataset.test_loaders):
-        if(current_task == dataset.N_TASKS -1):
-            print(k)
-            print(test_loader)
         if last and k < len(dataset.test_loaders) - 1:
             continue
         correct, correct_mask_classes, total = 0.0, 0.0, 0.0
         for data in test_loader:
-            print("entered")
             with torch.no_grad():
                 inputs, labels = data
                 inputs, labels = inputs.to(model.device), labels.to(model.device)

@@ -44,7 +44,7 @@ def mask_classes(outputs: torch.Tensor, dataset: ContinualDataset, k: int) -> No
                dataset.N_TASKS * dataset.N_CLASSES_PER_TASK] = -float('inf')
 
 @static_vars(all_labels=[],all_preds=[])
-def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False, current_task=None) -> Tuple[list, list]:
+def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False, create_plot=False) -> Tuple[list, list]:
     """
     Evaluates the accuracy of the model for each past task.
     :param model: the model to be evaluated
@@ -76,7 +76,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
                 _, pred = torch.max(outputs.data, 1)
 
                 ###Add this to collect all labels and predictions in order to create the confusion matrix
-                if args.plot_curve and current_task == dataset.N_TASKS - 1:
+                if create_plot:
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
 
@@ -108,7 +108,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
     :param args: the arguments of the current execution
     """
     print(args)
-
     if not args.nowand:
         assert wandb is not None, "Wandb not installed, please install it or run without wandb"
         project = args.wandb_project
@@ -154,7 +153,10 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if hasattr(model, 'begin_task'):
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics:
-            accs = evaluate(model, dataset, args, last=True, current_task=t)
+            if args.plot_curve:
+                accs = evaluate(model, dataset, args, last=True, create_plot=True)
+            else:
+                evaluate(model, dataset, args, last=True)
             results[t-1] = results[t-1] + accs[0]
             if dataset.SETTING == 'class-il':
                 results_mask_classes[t-1] = results_mask_classes[t-1] + accs[1]

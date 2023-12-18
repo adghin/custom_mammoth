@@ -55,6 +55,8 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
     status = model.net.training
     model.net.eval()
     accs, accs_mask_classes = [], []
+
+    print(kwargs)
     
     for k, test_loader in enumerate(dataset.test_loaders):
         if(kwargs[current_task] == dataset.N_TASKS -1):

@@ -39,7 +39,7 @@ class EwcOn(ContinualModel):
         if self.checkpoint is None:
             return torch.tensor(0.0).to(self.device)
         else:
-            penalty = (self.fish * ((self.net.get_params() - self.checkpoint) ** 2)).sum()
+            penalty = (self.fish * ((self.net.parameters() - self.checkpoint) ** 2)).sum()
             return penalty
 
     def end_task(self, dataset):
@@ -66,7 +66,7 @@ class EwcOn(ContinualModel):
             self.fish *= self.args.gamma
             self.fish += fish
 
-        self.checkpoint = self.net.get_params().data.clone()
+        self.checkpoint = self.net.parameters().data.clone()
 
     def observe(self, inputs, labels, not_aug_inputs):
 

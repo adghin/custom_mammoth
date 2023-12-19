@@ -306,6 +306,9 @@ def train(model: ContinualModel, dataset: ContinualDataset,
                          'streetcar', 
                          'tank', 
                          'tractor']
+
+        print(len(evaluate.all_labels))
+        print(len(evaluate.all_preds))
             
         wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
     

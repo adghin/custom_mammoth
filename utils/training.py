@@ -71,9 +71,9 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
 
                 _, pred = torch.max(outputs.data, 1)
 
-                 print(labels)
-                 print("")
-                 print(pred)
+                print(labels)
+                print("")
+                print(pred)
                 
                 if current_task == dataset.N_TASKS-1:
                     evaluate.all_preds.extend(pred.cpu()) 

@@ -23,15 +23,22 @@ def get_parser() -> ArgumentParser:
 
     return parser
 
+def get_params(model):
+    """
+    Returns all the parameters concatenated in a single tensor.
+    :return: parameters tensor (??)
+    """
+    params = []
+    for pp in list(model.parameters()):
+        params.append(pp.view(-1))
+    return torch.cat(params)
+
 def get_grads(model):
     grads = []
-    
     for param in model.parameters():
         grads.append(param.grad.view(-1))
-    grads = torch.cat(grads)
+    return torch.cat(grads)
     
-    return grads
-
 
 class EwcOn(ContinualModel):
     NAME = 'ewc_on'
@@ -48,11 +55,11 @@ class EwcOn(ContinualModel):
         if self.checkpoint is None:
             return torch.tensor(0.0).to(self.device)
         else:
-            penalty = (self.fish * ((self.net.parameters() - self.checkpoint) ** 2)).sum()
+            penalty = (self.fish * ((get_params(self.net)) - self.checkpoint) ** 2)).sum()
             return penalty
 
     def end_task(self, dataset):
-        fish = torch.zeros_like(self.net.get_params())
+        fish = torch.zeros_like((get_params(self.net)))
 
         for j, data in enumerate(dataset.train_loader):
             inputs, labels, _ = data
@@ -75,7 +82,8 @@ class EwcOn(ContinualModel):
             self.fish *= self.args.gamma
             self.fish += fish
 
-        self.checkpoint = self.net.parameters().data.clone()
+        params = get_params(self.net)
+        self.checkpoint = params.data.clone()
 
     def observe(self, inputs, labels, not_aug_inputs):
 

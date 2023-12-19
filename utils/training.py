@@ -71,10 +71,6 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
 
                 _, pred = torch.max(outputs.data, 1)
 
-                print(labels)
-                print("")
-                print(pred)
-                
                 if current_task == dataset.N_TASKS-1:
                     evaluate.all_preds.extend(pred.cpu()) 
                     evaluate.all_labels.extend(labels.cpu())
@@ -304,6 +300,11 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
         print(len(evaluate.all_labels))
         print(len(evaluate.all_preds))
+
+        print("hello")
+        print(evaluate.all_labels)
+        print("hello2")
+        print(evaluate.all_preds)
             
         wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
     

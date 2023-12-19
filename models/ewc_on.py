@@ -23,6 +23,15 @@ def get_parser() -> ArgumentParser:
 
     return parser
 
+def get_grads(model):
+    grads = []
+    
+    for param in model.parameters():
+        grads.append(param.grad.view(-1))
+    grads = torch.cat(grads)
+    
+    return grads
+
 
 class EwcOn(ContinualModel):
     NAME = 'ewc_on'
@@ -56,7 +65,7 @@ class EwcOn(ContinualModel):
                 exp_cond_prob = torch.mean(torch.exp(loss.detach().clone()))
                 loss = torch.mean(loss)
                 loss.backward()
-                fish += exp_cond_prob * self.net.get_grads() ** 2
+                fish += exp_cond_prob * get_grads(self.net) ** 2
 
         fish /= (len(dataset.train_loader) * self.args.batch_size)
 

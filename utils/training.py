@@ -206,16 +206,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if args.dataset == 'seq-cifar10':
             classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
         if args.dataset == 'seq-cifar100':
-            classes = ['beaver',
-                         'dolphin',
-                         'otter', 
-                         'seal',
-                         'whale',
-                         'aquarium fish', 
-                         'flatfish', 
-                         'ray', 
-                         'shark', 
-                         'trout',
+            classes = ['beaver','dolphin','otter','seal','whale','aquarium fish','flatfish','ray','shark','trout',
                          'orchids', 
                          'poppy', 
                          'rose', 

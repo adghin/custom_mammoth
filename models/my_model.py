@@ -23,6 +23,6 @@ class MyModel(ContinualModel):
     def __init__(self, backbone, loss, args, transform):
         super(MyModel, self).__init__(backbone, loss, args, transform)
 
-    def observe(self, inputs, labels, not_aug_inputs):
+    
 
         

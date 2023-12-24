@@ -212,14 +212,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
         if args.dataset == 'seq-cifar100':      
             classes = ['beaver','dolphin','otter','seal','whale','aquarium_fish','flatfish','ray','shark','trout','orchids','poppy','rose','sunflower','tulip','bottle','bowl','can','cup','plate','apple','mushroom','orange','pear','sweet_pepper','clock','computer_keyboard','lamp','telephone','television','bed','chair','couch','table','wardrobe','bee','beetle','butterfly','caterpillar','cockroach','bear','leopard','lion','tiger','wolf','bridge','castle','house','road','skyscraper','cloud','forest','mountain','plain','sea','camel','cattle','chimpanzee','elephant','kangaroo','fox','porcupine','possum','raccoon','skunk','crab','lobster','snail','spider','worm','baby','boy','girl','man','woman','crocodile','dinosaur','lizard','snake','turtle','hamster','mouse','rabbit','shrew','squirrel','maple_tree','oak_tree','palm_tree','pine_tree','willow_tree','bicycle','bus','motorcycle','pickup_truck','train','lawn_mower','rocket','streetcar','tank','tractor']
-       
-            cm = confusion_matrix(evaluate.all_labels, evaluate.all_preds)
-
-            fig = go.Figure(data=go.Heatmap(z=cm, x=classes, y=classes, colorscale='Viridis'))
-            fig.update_layout(xaxis_title='Predicted', yaxis_title='True', title='Confusion Matrix')
-
-
-            wandb.log({"confusion_matrix": wandb.Image(fig)})
+            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
             
     if not args.disable_log and not args.ignore_other_metrics:
         logger.add_bwt(results, results_mask_classes)

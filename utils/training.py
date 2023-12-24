@@ -183,7 +183,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
         if hasattr(model, 'end_task'):
             for name, param in model.named_parameters():
-                print name, param.data
+                print(name, param.data)
             this_weights.extend(model.net.conv1.weight)
             model.end_task(dataset)
 

@@ -89,10 +89,8 @@ class EwcOn(ContinualModel):
 
         self.opt.zero_grad()
         outputs = self.net(inputs)
-        print(outputs)
         penalty = self.penalty()
         loss = self.loss(outputs, labels) + self.args.e_lambda * penalty
-        print(loss)
         assert not torch.isnan(loss)
         loss.backward()
         self.opt.step()

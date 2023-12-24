@@ -145,7 +145,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
     print(file=sys.stderr)
     for t in range(dataset.N_TASKS):
         print("Model weights len")
-        print(len(modelnet.conv1.weights))
+        print(len(model.net.conv1.weights))
         model.net.train()
         train_loader, test_loader = dataset.get_data_loaders()
         if hasattr(model, 'begin_task'):

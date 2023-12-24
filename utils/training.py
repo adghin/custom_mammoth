@@ -22,6 +22,9 @@ except ImportError:
     wandb = None
     
 ###START --- aghinea
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+
 def static_vars(**kwargs):
     def decorate(func):
         for k in kwargs:
@@ -206,22 +209,16 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if args.dataset == 'seq-cifar10':
             classes = ['airplane','automobile','bird','cat','deer','dog','frog','horse','ship','truck']
             wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
-        if args.dataset == 'seq-cifar100':
+        if args.dataset == 'seq-cifar100':      
             classes = ['beaver','dolphin','otter','seal','whale','aquarium_fish','flatfish','ray','shark','trout','orchids','poppy','rose','sunflower','tulip','bottle','bowl','can','cup','plate','apple','mushroom','orange','pear','sweet_pepper','clock','computer_keyboard','lamp','telephone','television','bed','chair','couch','table','wardrobe','bee','beetle','butterfly','caterpillar','cockroach','bear','leopard','lion','tiger','wolf','bridge','castle','house','road','skyscraper','cloud','forest','mountain','plain','sea','camel','cattle','chimpanzee','elephant','kangaroo','fox','porcupine','possum','raccoon','skunk','crab','lobster','snail','spider','worm','baby','boy','girl','man','woman','crocodile','dinosaur','lizard','snake','turtle','hamster','mouse','rabbit','shrew','squirrel','maple_tree','oak_tree','palm_tree','pine_tree','willow_tree','bicycle','bus','motorcycle','pickup_truck','train','lawn_mower','rocket','streetcar','tank','tractor']
-            middle = len(evaluate.all_labels)//2
 
-            first_half_labels = evaluate.all_labels[:middle]
-            first_half_preds  = evaluate.all_preds[middle:]
+            cm = confusion_matrix(evaluate.all_labels, evaluate.all_preds,classes)
 
-            second_half_labels = evaluate.all_labels[:middle]
-            second_half_preds  = evaluate.all_preds[middle:]
-
-            half_classes = len(classes)//2
-            first_half_classes = classes[:half_classes]
-            second_half_classes = classes[half_classes:]
-
-            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(first_half_labels, first_half_preds, first_half_classes)})
-            wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(second_half_labels, second_half_preds, second_half_classes)})
+            fig, ax = plt.subplots(figsize=(15, 12))
+            sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=classes, yticklabels=classes, cbar=False, ax=ax)
+            ax.axis('off') 
+            
+            wandb.log({"confusion_matrix": wandb.Image(fig)})
             
     if not args.disable_log and not args.ignore_other_metrics:
         logger.add_bwt(results, results_mask_classes)

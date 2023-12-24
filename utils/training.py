@@ -182,9 +182,8 @@ def train(model: ContinualModel, dataset: ContinualDataset,
                 scheduler.step()
 
         if hasattr(model, 'end_task'):
-            print(list(model.parameters()))
-            for pp in list(model.parameters()):
-                print(pp)
+            for name, param in model.named_parameters():
+                print name, param.data
             this_weights.extend(model.net.conv1.weight)
             model.end_task(dataset)
 

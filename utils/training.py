@@ -145,8 +145,9 @@ def train(model: ContinualModel, dataset: ContinualDataset,
     print(file=sys.stderr)
     this_weights = []
     for t in range(dataset.N_TASKS):
-        if(len(this_weights) > 0):
-            model.net.conv1.weight = this_weights
+        with torch.no_grad():
+            if(len(this_weights) > 0):
+                model.net.conv1.weight.copy_(this_weights)
         model.net.train()
         train_loader, test_loader = dataset.get_data_loaders()
         if hasattr(model, 'begin_task'):

@@ -216,8 +216,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
             fig, ax = plt.subplots(figsize=(15, 12))
             sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=classes, yticklabels=classes, cbar=False, ax=ax)
-            ax.axis('off') 
-            
             wandb.log({"confusion_matrix": wandb.Image(fig)})
             
     if not args.disable_log and not args.ignore_other_metrics:

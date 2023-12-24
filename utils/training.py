@@ -24,7 +24,7 @@ except ImportError:
 ###START --- aghinea
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
-import matplotlib.pyplot as plt
+import plotly.figure_factory as ff
 
 def static_vars(**kwargs):
     def decorate(func):
@@ -212,12 +212,12 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
         if args.dataset == 'seq-cifar100':      
             classes = ['beaver','dolphin','otter','seal','whale','aquarium_fish','flatfish','ray','shark','trout','orchids','poppy','rose','sunflower','tulip','bottle','bowl','can','cup','plate','apple','mushroom','orange','pear','sweet_pepper','clock','computer_keyboard','lamp','telephone','television','bed','chair','couch','table','wardrobe','bee','beetle','butterfly','caterpillar','cockroach','bear','leopard','lion','tiger','wolf','bridge','castle','house','road','skyscraper','cloud','forest','mountain','plain','sea','camel','cattle','chimpanzee','elephant','kangaroo','fox','porcupine','possum','raccoon','skunk','crab','lobster','snail','spider','worm','baby','boy','girl','man','woman','crocodile','dinosaur','lizard','snake','turtle','hamster','mouse','rabbit','shrew','squirrel','maple_tree','oak_tree','palm_tree','pine_tree','willow_tree','bicycle','bus','motorcycle','pickup_truck','train','lawn_mower','rocket','streetcar','tank','tractor']
-            print(type(evaluate.all_labels))
-            print(type(evaluate.all_preds))
+       
             cm = confusion_matrix(evaluate.all_labels, evaluate.all_preds)
 
-            fig, ax = plt.subplots(figsize=(15, 12))
-            sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=classes, yticklabels=classes, cbar=False, ax=ax)
+            fig = ff.create_annotated_heatmap(z=cm, x=classes, y=classes, colorscale='Viridis')
+            fig.update_layout(xaxis_title='Predicted', yaxis_title='True', title='Confusion Matrix')
+
             wandb.log({"confusion_matrix": wandb.Image(fig)})
             
     if not args.disable_log and not args.ignore_other_metrics:

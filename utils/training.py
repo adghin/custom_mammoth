@@ -24,7 +24,7 @@ except ImportError:
 ###START --- aghinea
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
-import plotly.figure_factory as ff
+import plotly.graph_objects as go
 
 def static_vars(**kwargs):
     def decorate(func):
@@ -215,8 +215,9 @@ def train(model: ContinualModel, dataset: ContinualDataset,
        
             cm = confusion_matrix(evaluate.all_labels, evaluate.all_preds)
 
-            fig = ff.create_annotated_heatmap(z=cm, x=classes, y=classes, colorscale='Viridis')
+            fig = go.Figure(data=go.Heatmap(z=cm, x=classes, y=classes, colorscale='Viridis'))
             fig.update_layout(xaxis_title='Predicted', yaxis_title='True', title='Confusion Matrix')
+
 
             wandb.log({"confusion_matrix": wandb.Image(fig)})
             

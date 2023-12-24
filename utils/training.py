@@ -143,9 +143,10 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             random_results_class, random_results_task = evaluate(model, dataset_copy, args)
 
     print(file=sys.stderr)
+    this_weights = []
     for t in range(dataset.N_TASKS):
-        print("Model weights len")
-        print(len(model.net.conv1.weights))
+        if(len(this_weights) > 0):
+            model.net.conv1.weight = this_weights
         model.net.train()
         train_loader, test_loader = dataset.get_data_loaders()
         if hasattr(model, 'begin_task'):
@@ -183,6 +184,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
                 scheduler.step()
 
         if hasattr(model, 'end_task'):
+            this_weights.extend(model.net.conv1.weight)
             model.end_task(dataset)
 
         ###START --- aghinea

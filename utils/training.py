@@ -230,8 +230,8 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
             ax.xaxis.set_ticks(np.arange(0, 100, 1))
             ax.yaxis.set_ticks(np.arange(0, 100, 1))
-            ax.xaxis.set_ticklabels(class_names, rotation=90, fontsize=10)
-            ax.yaxis.set_ticklabels(class_names, rotation=0, fontsize=10)
+            ax.xaxis.set_ticklabels(classes, rotation=90, fontsize=10)
+            ax.yaxis.set_ticklabels(classes, rotation=0, fontsize=10)
 
             wandb.log({'conf_matrix': wandb.Image(fig)})
             

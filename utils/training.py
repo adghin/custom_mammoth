@@ -26,6 +26,12 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 
+def imshow(img):
+    img = img / 2 + 0.5
+    npimg = img.numpy()   
+    plt.imshow(np.transpose(npimg, (1, 2, 0))) 
+    plt.show()
+
 def static_vars(**kwargs):
     def decorate(func):
         for k in kwargs:
@@ -68,6 +74,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
             with torch.no_grad():
                 inputs, labels = data
                 inputs, labels = inputs.to(model.device), labels.to(model.device)
+                imshow(tv.utils.make_grid(inputs))
                 if 'class-il' not in model.COMPATIBILITY:
                     outputs = model(inputs, k)
                 else:

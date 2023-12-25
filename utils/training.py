@@ -22,16 +22,9 @@ except ImportError:
     wandb = None
     
 ###START --- aghinea
-import torchvision as tv
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
-
-def imshow(img):
-    img = img / 2 + 0.5
-    npimg = img.numpy()   
-    plt.imshow(np.transpose(npimg, (1, 2, 0))) 
-    plt.show()
 
 def static_vars(**kwargs):
     def decorate(func):
@@ -75,8 +68,6 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
             with torch.no_grad():
                 inputs, labels = data
                 inputs, labels = inputs.to(model.device), labels.to(model.device)
-                print(labels)
-                imshow(tv.utils.make_grid(inputs.cpu()))
                 if 'class-il' not in model.COMPATIBILITY:
                     outputs = model(inputs, k)
                 else:

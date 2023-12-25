@@ -74,6 +74,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
             with torch.no_grad():
                 inputs, labels = data
                 inputs, labels = inputs.to(model.device), labels.to(model.device)
+                print(labels)
                 imshow(tv.utils.make_grid(inputs))
                 if 'class-il' not in model.COMPATIBILITY:
                     outputs = model(inputs, k)

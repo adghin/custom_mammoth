@@ -24,7 +24,6 @@ except ImportError:
 ###START --- aghinea
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
-import plotly.graph_objects as go
 
 def static_vars(**kwargs):
     def decorate(func):
@@ -121,7 +120,14 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             elif args.dataset == 'seq-imagenetR':
                 project = 'continual_imagenetR'
         else:
-            project = 'continual_benchmarks'
+            if args.dataset == 'seq-cifar10':
+                project = 'continual_cifar10_no_upsample'
+            elif args.dataset == 'seq-cifar100':
+                project = 'continual_cifar100_no_upsample'
+            elif args.dataset == 'seq-tinyimg':
+                project = 'continual_tinyimagenet_no_upsample'
+            else:
+                project = 'continual_benchmarks'
     
         wandb.init(dir='/home/aghinea/tmp/', project=project, entity=args.wandb_entity, config=vars(args))
         args.wandb_url = wandb.run.get_url()
@@ -143,7 +149,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             random_results_class, random_results_task = evaluate(model, dataset_copy, args)
 
     print(file=sys.stderr)
-    this_weights = []
     for t in range(dataset.N_TASKS):
         model.net.train()
         train_loader, test_loader = dataset.get_data_loaders()
@@ -182,9 +187,6 @@ def train(model: ContinualModel, dataset: ContinualDataset,
                 scheduler.step()
 
         if hasattr(model, 'end_task'):
-            for name, param in model.named_parameters():
-                print(name, param.data)
-            this_weights.extend(model.net.conv1.weight)
             model.end_task(dataset)
 
         ###START --- aghinea
@@ -216,7 +218,21 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             wandb.log({'conf_matrix': wandb.sklearn.plot_confusion_matrix(evaluate.all_labels, evaluate.all_preds, classes)})
         if args.dataset == 'seq-cifar100':      
             classes = ['beaver','dolphin','otter','seal','whale','aquarium_fish','flatfish','ray','shark','trout','orchids','poppy','rose','sunflower','tulip','bottle','bowl','can','cup','plate','apple','mushroom','orange','pear','sweet_pepper','clock','computer_keyboard','lamp','telephone','television','bed','chair','couch','table','wardrobe','bee','beetle','butterfly','caterpillar','cockroach','bear','leopard','lion','tiger','wolf','bridge','castle','house','road','skyscraper','cloud','forest','mountain','plain','sea','camel','cattle','chimpanzee','elephant','kangaroo','fox','porcupine','possum','raccoon','skunk','crab','lobster','snail','spider','worm','baby','boy','girl','man','woman','crocodile','dinosaur','lizard','snake','turtle','hamster','mouse','rabbit','shrew','squirrel','maple_tree','oak_tree','palm_tree','pine_tree','willow_tree','bicycle','bus','motorcycle','pickup_truck','train','lawn_mower','rocket','streetcar','tank','tractor']
-            wandb.log({'conf_matrix': wandb.plot.confusion_matrix(preds=evaluate.all_preds,y_true=evaluate.all_labels,class_names=classes)})
+            matrix = confusion_matrix(evaluate.all_labels,evaluate.all_preds)
+            
+            fig, ax = plt.subplots(figsize=(20, 20))
+            sns.heatmap(matrix, ax=ax, fmt='g')
+
+            ax.set_xlabel('Actual')
+            ax.set_ylabel('Predicted')
+            ax.set_title('Confusion Matrix')
+
+            ax.xaxis.set_ticks(np.arange(0, 100, 1))
+            ax.yaxis.set_ticks(np.arange(0, 100, 1))
+            ax.xaxis.set_ticklabels(class_names, rotation=90, fontsize=10)
+            ax.yaxis.set_ticklabels(class_names, rotation=0, fontsize=10)
+
+            wandb.log({'conf_matrix': wandb.Image(fig)})
             
     if not args.disable_log and not args.ignore_other_metrics:
         logger.add_bwt(results, results_mask_classes)

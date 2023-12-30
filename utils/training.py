@@ -156,7 +156,7 @@ def train(original_model: ContinualModel, copy_model: ContinualModel, dataset: C
 
     print(file=sys.stderr)
     for t in range(dataset.N_TASKS):
-        if t <= dataset.N_TASKS/2:
+        if t < dataset.N_TASKS//2:
             model = copy_model
         else:
             model = original_model

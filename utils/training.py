@@ -149,10 +149,10 @@ def train(original_model: ContinualModel, copy_model: ContinualModel, dataset: C
     if not args.ignore_other_metrics:
         dataset_copy = get_dataset(args)
         for t in range(dataset.N_TASKS):
-            model.net.train()
+            copy_model.net.train()
             _, _ = dataset_copy.get_data_loaders()
-        if model.NAME != 'icarl' and model.NAME != 'pnn':
-            random_results_class, random_results_task = evaluate(model, dataset_copy, args)
+        if copy_model.NAME != 'icarl' and copy_model.NAME != 'pnn':
+            random_results_class, random_results_task = evaluate(copy_model, dataset_copy, args)
 
     print(file=sys.stderr)
     for t in range(dataset.N_TASKS):

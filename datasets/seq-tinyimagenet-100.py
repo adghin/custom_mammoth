@@ -118,7 +118,7 @@ class MyTinyImagenet(TinyImagenet):
 
 
 class SequentialTinyImagenet(ContinualDataset):
-    NAME = 'seq-tinyimg'
+    NAME = 'seq-tinyimg-100'
     SETTING = 'class-il'
     N_CLASSES_PER_TASK = 10
     N_TASKS = 10

@@ -95,7 +95,7 @@ def evaluate(model: ContinualModel, dataset: ContinualDataset, args, last=False,
     return accs, accs_mask_classes
 
 
-def train(model: ContinualModel, dataset: ContinualDataset,
+def train(original_model: ContinualModel, copy_model: ContinualModel, dataset: ContinualDataset,
           args: Namespace) -> None:
     """
     The training process, including evaluations and loggers.
@@ -133,8 +133,13 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         wandb.init(dir='/home/aghinea/tmp/', project=project, entity=args.wandb_entity, config=vars(args))
         args.wandb_url = wandb.run.get_url()
         
-    model.net.to(model.device)
+    original_model.net.to(model.device)
+    copy_model.net.to(model.device)
+
+    current_task = 0
     results, results_mask_classes = [], []
+
+    
 
     if not args.disable_log:
         logger = Logger(dataset.SETTING, dataset.NAME, model.NAME)
@@ -151,6 +156,10 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
     print(file=sys.stderr)
     for t in range(dataset.N_TASKS):
+        if t <= dataset.N_TASKS/2:
+            model = copy_model
+        else:
+            model = original_model
         model.net.train()
         train_loader, test_loader = dataset.get_data_loaders()
         if hasattr(model, 'begin_task'):

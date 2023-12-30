@@ -133,8 +133,8 @@ def train(original_model: ContinualModel, copy_model: ContinualModel, dataset: C
         wandb.init(dir='/home/aghinea/tmp/', project=project, entity=args.wandb_entity, config=vars(args))
         args.wandb_url = wandb.run.get_url()
         
-    original_model.net.to(model.device)
-    copy_model.net.to(model.device)
+    original_model.net.to(original_model.device)
+    copy_model.net.to(copy_model.device)
 
     current_task = 0
     results, results_mask_classes = [], []

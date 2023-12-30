@@ -142,7 +142,7 @@ def train(original_model: ContinualModel, copy_model: ContinualModel, dataset: C
     
 
     if not args.disable_log:
-        logger = Logger(dataset.SETTING, dataset.NAME, model.NAME)
+        logger = Logger(dataset.SETTING, dataset.NAME, copy_model.NAME)
 
     progress_bar = ProgressBar(verbose=not args.non_verbose)
 

@@ -49,14 +49,14 @@ class TinyImagenet(Dataset):
                 download(ln, filename=os.path.join(root, 'tiny-imagenet-myprocessed-nohd.zip'), unzip=True, unzip_path=root, clean=True)
                    
         self.data = []
-        for num in range(20):
+        for num in range(10):
             self.data.append(np.load(os.path.join(
                 root, 'my_processed/x_%s_%02d.npy' %
                       ('train' if self.train else 'val', num + 1))))
         self.data = np.concatenate(np.array(self.data))
 
         self.targets = []
-        for num in range(20):
+        for num in range(10):
             self.targets.append(np.load(os.path.join(
                 root, 'my_processed/y_%s_%02d.npy' %
                       ('train' if self.train else 'val', num + 1))))

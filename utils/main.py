@@ -145,9 +145,6 @@ def main(args=None):
 
     loss = dataset.get_loss()
     model = get_model(args, backbone, loss, dataset.get_transform())
-    original_model = get_model(args, backbone, loss, dataset.get_transform())
-    copy_model = get_model(args, backbone, loss, dataset.get_transform())
-
     print(model)
 
     if args.distributed == 'dp':
@@ -165,7 +162,7 @@ def main(args=None):
     setproctitle.setproctitle('{}_{}_{}'.format(args.model, args.buffer_size if 'buffer_size' in args else 0, args.dataset))
 
     if isinstance(dataset, ContinualDataset):
-        train(original_model, copy_model, dataset, args)
+        train(model, dataset, args)
     else:
         assert not hasattr(model, 'end_task') or model.NAME == 'joint_gcl'
         ctrain(args)

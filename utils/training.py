@@ -135,9 +135,9 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         
     model.net.to(model.device)
     results, results_mask_classes = [], []
-              
+
     if not args.disable_log:
-        logger = Logger(dataset.SETTING, dataset.NAME, copy_model.NAME)
+        logger = Logger(dataset.SETTING, dataset.NAME, model.NAME)
 
     progress_bar = ProgressBar(verbose=not args.non_verbose)
 
